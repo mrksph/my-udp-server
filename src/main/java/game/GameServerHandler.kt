@@ -1,4 +1,4 @@
-package com.pingpong.net.game
+package game
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler

@@ -1,4 +1,4 @@
-package com.pingpong.net.http
+package http
 
 import io.netty.bootstrap.ServerBootstrap
 

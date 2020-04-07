@@ -1,4 +1,4 @@
-package com.pingpong.net.game
+package game
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelOption

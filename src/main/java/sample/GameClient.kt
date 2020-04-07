@@ -1,4 +1,4 @@
-package com.pingpong.net.sample
+package sample
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled

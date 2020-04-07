@@ -1,4 +1,4 @@
-package com.pingpong.net.sample
+package sample
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler

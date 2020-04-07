@@ -1,5 +1,5 @@
-import com.pingpong.net.game.GameServer
-import com.pingpong.net.sample.GameClient
+import game.GameServer
+import sample.GameClient
 
 fun main() {
 //        println("Binding HTTP Server")
