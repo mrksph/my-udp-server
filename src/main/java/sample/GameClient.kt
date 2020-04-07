@@ -12,12 +12,20 @@ import java.net.InetSocketAddress
 
 object GameClient {
 
-    fun connect() {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println("Connecting Game Client (Port: $DEFAULT_PORT)")
+        connect()
+    }
+
+    private fun connect() {
         val eventLoopGroup = NioEventLoopGroup()
         try {
-            val b = Bootstrap()
+            val server = Bootstrap()
 
-            b.group(eventLoopGroup)
+            //Create an UDP server, with a Broadcast Option
+            //Also sets the handler to be called when a message is received
+            server.group(eventLoopGroup)
                     .channel(NioDatagramChannel::class.java)
                     .option(ChannelOption.SO_BROADCAST, true)
                     .handler(GameClientHandler)
@@ -27,7 +35,7 @@ object GameClient {
             var loop = true
             var counter = 0
 
-            val channel = b.bind(0)
+            val channel = server.bind(0)
                     .sync()
                     .channel()
 
@@ -59,9 +67,4 @@ object GameClient {
         return packet
     }
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        println("Connecting Game Client (Port: ${DEFAULT_PORT})")
-        connect()
-    }
 }
