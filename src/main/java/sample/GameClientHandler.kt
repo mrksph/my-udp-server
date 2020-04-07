@@ -1,13 +1,23 @@
 package sample
 
+import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
-import java.net.DatagramPacket
+import io.netty.channel.socket.DatagramPacket
+import io.netty.util.CharsetUtil
 
-class GameClientHandler : SimpleChannelInboundHandler<DatagramPacket>() {
+@ChannelHandler.Sharable
+object GameClientHandler : SimpleChannelInboundHandler<DatagramPacket>() {
 
     override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
-        val response = packet.data
-    }
+        val response = packet.content().toString(CharsetUtil.UTF_8)
+        if(response.startsWith("QOTM: ")) {
+            println("Quote of the Moment: " + response.substring(6))
+        }
+   }
 
+    override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+        cause.printStackTrace()
+        ctx.close()
+    }
 }

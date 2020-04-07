@@ -1,5 +1,6 @@
 package sample
 
+import DEFAULT_PORT
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelOption
@@ -11,8 +12,6 @@ import java.net.InetSocketAddress
 
 object GameClient {
 
-    private const val DEFAULT_PORT: Int = 31047
-
     fun connect() {
         val eventLoopGroup = NioEventLoopGroup()
         try {
@@ -21,25 +20,48 @@ object GameClient {
             b.group(eventLoopGroup)
                     .channel(NioDatagramChannel::class.java)
                     .option(ChannelOption.SO_BROADCAST, true)
-                    .handler(GameClientHandler())
+                    .handler(GameClientHandler)
+
+            println("Game Client is up")
+
+            var loop = true
+            var counter = 0
 
             val channel = b.bind(0)
                     .sync()
                     .channel()
 
-            val copiedBuffer = Unpooled.copiedBuffer("QOTM", CharsetUtil.UTF_8)
-            val inetSocketAddress = InetSocketAddress(31047)
+            while (loop) {
 
-            val packet = DatagramPacket(copiedBuffer, inetSocketAddress)
+                if (counter == 5) loop = false
 
-            channel.writeAndFlush(packet).sync()
+                val packet = createDatagram()
 
-            if (!channel.closeFuture().await(5000)) {
-                System.err.println("Request timed out")
+                channel.writeAndFlush(packet).sync()
+
+                println(counter);
+                counter++
+
             }
-
+            channel.close();
         } finally {
+            println("Disconnecting Game Client...")
             eventLoopGroup.shutdownGracefully()
+            println("Game Client disconnected")
         }
+    }
+
+    private fun createDatagram(): DatagramPacket {
+        val copiedBuffer = Unpooled.copiedBuffer("QOTM?", CharsetUtil.UTF_8)
+        val inetSocketAddress = InetSocketAddress("255.255.255.255", DEFAULT_PORT)
+
+        val packet = DatagramPacket(copiedBuffer, inetSocketAddress)
+        return packet
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println("Connecting Game Client (Port: ${DEFAULT_PORT})")
+        connect()
     }
 }
