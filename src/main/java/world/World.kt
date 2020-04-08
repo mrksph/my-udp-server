@@ -1,5 +1,3 @@
 package world
 
-object World {
-
-}
+object World

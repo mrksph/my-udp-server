@@ -1,4 +1,3 @@
 package game.session
 
-class Session {
-}
+class Session

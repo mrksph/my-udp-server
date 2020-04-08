@@ -47,11 +47,11 @@ object GameClient {
 
                 channel.writeAndFlush(packet).sync()
 
-                println(counter);
+                println(counter)
                 counter++
 
             }
-            channel.close();
+            channel.close()
         } finally {
             println("Disconnecting Game Client...")
             eventLoopGroup.shutdownGracefully()

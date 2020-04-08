@@ -11,13 +11,13 @@ class GameServerHandler(connectionManager: GameServer) : SimpleChannelInboundHan
 
     override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
         System.err.println(packet)
-        if("QOTM?" == packet.content().toString(CharsetUtil.UTF_8)){
+        if ("QOTM?" == packet.content().toString(CharsetUtil.UTF_8)) {
             counter++
             println("This is the $counter request")
             val copiedBuffer = Unpooled.copiedBuffer("QOTM: " + "SS", CharsetUtil.UTF_8)
             context.write(DatagramPacket(copiedBuffer, packet.sender()))
 
-            if(counter == 11)
+            if (counter == 11)
                 context.close()
         }
     }

@@ -11,11 +11,6 @@ class GameServer(latch: CountDownLatch) : BaseServer() {
         bootstrap.childHandler(GameServerHandler(this))
     }
 
-    override fun bind(address: InetSocketAddress): ChannelFuture {
-        //Log something
-        return super.bind(address)
-    }
-
     override fun onBindSuccess(address: InetSocketAddress) {
         server.port = address.port
         server.ip = address.hostString

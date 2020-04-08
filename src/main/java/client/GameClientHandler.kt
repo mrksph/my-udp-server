@@ -11,10 +11,10 @@ object GameClientHandler : SimpleChannelInboundHandler<DatagramPacket>() {
 
     override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
         val response = packet.content().toString(CharsetUtil.UTF_8)
-        if(response.startsWith("QOTM: ")) {
+        if (response.startsWith("QOTM: ")) {
             println("Quote of the Moment: " + response.substring(6))
         }
-   }
+    }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
         cause.printStackTrace()

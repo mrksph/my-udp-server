@@ -5,15 +5,7 @@ import config.Config
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
-import io.netty.channel.epoll.Epoll
-import io.netty.channel.epoll.EpollDatagramChannel
-import io.netty.channel.epoll.EpollEventLoopGroup
-import io.netty.channel.kqueue.KQueue
-import io.netty.channel.kqueue.KQueueDatagramChannel
-import io.netty.channel.kqueue.KQueueEventLoopGroup
-import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
-import io.netty.channel.socket.nio.NioDatagramChannel
 import util.Networking
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
