@@ -6,7 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.channel.socket.DatagramPacket
 import io.netty.util.CharsetUtil
 
-object GameServerHandler : SimpleChannelInboundHandler<DatagramPacket>() {
+class GameServerHandler(connectionManager: GameServer) : SimpleChannelInboundHandler<DatagramPacket>() {
     var counter = 0
 
     override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
