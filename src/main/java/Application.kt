@@ -7,10 +7,11 @@ fun main(args: Array<String>) {
     try {
         val server = MainServer(args)
         /*
-       Instantiate Server from arguments (??)
+            Instantiate Server from arguments (??)
         */
         server.run()
-    } catch (t: Throwable) {
+    } catch (e: Exception) {
+        e.printStackTrace()
         exitProcess(1)
     }
 
