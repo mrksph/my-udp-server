@@ -1,3 +1,3 @@
 package world
 
-object World
+class World

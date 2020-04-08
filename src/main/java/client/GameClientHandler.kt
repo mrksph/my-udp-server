@@ -7,7 +7,7 @@ import io.netty.channel.socket.DatagramPacket
 import io.netty.util.CharsetUtil
 
 @ChannelHandler.Sharable
-object GameClientHandler : SimpleChannelInboundHandler<DatagramPacket>() {
+class GameClientHandler : SimpleChannelInboundHandler<DatagramPacket>() {
 
     override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
         val response = packet.content().toString(CharsetUtil.UTF_8)
