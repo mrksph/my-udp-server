@@ -1,5 +1,6 @@
 package world
 
+import io.WorldStorageProvider
 import net.MainServer
 import java.util.*
 
@@ -13,7 +14,7 @@ class World {
     constructor(
             server: MainServer,
             worldCreator: WorldCreator,
-            worldStorageProvider: WorldStorageProvider?) {
+            worldStorageProvider: WorldStorageProvider) {
         this.server = server
         server.addWorld(this)
         initialized = true

@@ -2,9 +2,8 @@ package net
 
 import DEFAULT_PORT
 import config.Config
-import io.WorldStorageProviderFactory
-import io.format.FormatWorldStorageProvider
-import io.netty.bootstrap.Bootstrap
+import io.StorageProviderFactory
+import io.WorldStorageProvider
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import net.game.GameServer
@@ -22,18 +21,24 @@ import kotlin.system.exitProcess
 
 class MainServer(config: Array<String>) : Server {
 
-    private var config: Config = Config().parseConfig(config)
+    private var config: Config
 
-    private val server = Bootstrap()
     private lateinit var channel: Class<out DatagramChannel?>
     private lateinit var eventLoopGroup: EventLoopGroup
-    private var storageProviderFactory: WorldStorageProviderFactory? = null
+    private lateinit var storageProvider: WorldStorageProvider
+    private lateinit var worldContainer: File
+    private lateinit var worldFolder: String
 
-    val worlds: WorldScheduler = WorldScheduler()
-    val scheduler: ServerScheduler = ServerScheduler(this, worlds)
+    private val worlds: WorldScheduler = WorldScheduler()
+    private val scheduler: ServerScheduler = ServerScheduler(this, worlds)
 
     var port = 0
     var ip: String? = null
+
+    init {
+        this.config = Config().parseConfig(config)
+        loadConfig()
+    }
 
     /**
      * The idea is to first create the world in the server then bind the server to receive connections
@@ -51,10 +56,6 @@ class MainServer(config: Array<String>) : Server {
 
         // Set port and ip from config
 
-        // create storage provider
-        if (storageProviderFactory == null) {
-            storageProviderFactory = FormatWorldStorageProvider(File("s", "s"))
-        }
         //2. Create world
         val worldCreator = WorldCreator.Builder()
                 .name("Hola")
@@ -113,29 +114,23 @@ class MainServer(config: Array<String>) : Server {
     override fun getVersion() {
     }
 
-    override fun getMaxPlayers() {
-    }
-
-    override fun getPort() {
-    }
 
     override fun addWorld(world: World) {}
 
-    override fun createWorld(worldCreator: WorldCreator): World {
-        val world = World(this,
-                worldCreator,
-                storageProviderFactory?.createWorldStorageProvider(worldCreator.name)
-        )
-        return world
+    override fun createWorld(worldCreator: WorldCreator): World =
+            World(
+                    this,
+                    worldCreator,
+                    StorageProviderFactory.createWorldStorageProvider(worldContainer, worldCreator.name)
+            )
+
+    override fun getWorldContainer(): File = File(worldFolder)
+
+    override fun loadConfig() {
+        config.load()
     }
 
-    override fun getWorldContainer(): File {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun getSessionRegistry(): SessionRegistry {
-        return SessionRegistry()
-    }
+    fun getSessionRegistry(): SessionRegistry = SessionRegistry()
 
 
 }
