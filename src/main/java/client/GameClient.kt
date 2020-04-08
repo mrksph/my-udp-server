@@ -10,15 +10,9 @@ import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.util.CharsetUtil
 import java.net.InetSocketAddress
 
-object GameClient {
+class GameClient {
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        println("Connecting Game Client (Port: $DEFAULT_PORT)")
-        connect()
-    }
-
-    private fun connect() {
+    fun connect() {
         val eventLoopGroup = NioEventLoopGroup()
         try {
             val server = Bootstrap()

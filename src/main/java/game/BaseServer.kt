@@ -14,21 +14,22 @@ import io.netty.channel.kqueue.KQueueServerSocketChannel
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 
-abstract class BaseServer {
+abstract class BaseServer(var server: MainServer,
+                          var protocolProvider: ProtocolProvider,
+                          var latch: CountDownLatch) {
 
     private val EPOLL_AVAILABLE = Epoll.isAvailable()
     private val KQUEUE_AVAILABLE = KQueue.isAvailable()
 
-    lateinit var channel: Channel
-    lateinit var server: MainServer
-    lateinit var latch: CountDownLatch
-
     protected var bossGroup: EventLoopGroup
     protected var workerGroup: EventLoopGroup
     protected var bootstrap: ServerBootstrap
+
+    lateinit var channel: Channel
 
     init {
         bossGroup = createBestEventLoopGroup()
@@ -42,7 +43,7 @@ abstract class BaseServer {
     }
 
     open fun bind(address: InetSocketAddress): ChannelFuture {
-        val channelFuture = server.bind(address).addListener {
+        val channelFuture = this.bootstrap.bind(address).addListener {
             if (it.isSuccess) {
                 onBindSuccess(address)
             } else {
@@ -100,3 +101,4 @@ abstract class BaseServer {
     abstract fun shutdown()
 
 }
+

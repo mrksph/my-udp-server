@@ -1,12 +1,14 @@
 package game
 
+import game.session.Session
 import io.netty.channel.Channel
-import io.netty.channel.ChannelFuture
+import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
 
-class GameServer(latch: CountDownLatch) : BaseServer() {
+class GameServer(server: MainServer, protocolProvider: ProtocolProvider, latch: CountDownLatch)
+    : BaseServer(server, protocolProvider, latch) {
     init {
         bootstrap.childHandler(GameServerHandler(this))
     }
@@ -27,5 +29,7 @@ class GameServer(latch: CountDownLatch) : BaseServer() {
 
     override fun newSession(channel: Channel) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //val session = Session(server, protocolProvider, channel, this)
     }
+
 }

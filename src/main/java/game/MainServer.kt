@@ -6,6 +6,7 @@ import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.DatagramChannel
+import protocol.ProtocolProvider
 import util.Networking
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
@@ -13,7 +14,7 @@ import kotlin.system.exitProcess
 
 class MainServer(config: Array<String>) : Server {
 
-    private var config: Config
+    private var config: Config = Config().parseConfig(config)
 
     private val server = Bootstrap()
     private lateinit var channel: Class<out DatagramChannel?>
@@ -21,9 +22,7 @@ class MainServer(config: Array<String>) : Server {
     var port = 0
     var ip: String? = null
 
-    init {
-        this.config = Config().parseConfig(config)
-    }
+
 
     /**
      * The idea is to first create the world in the server then bind the server to receive connections
@@ -43,14 +42,16 @@ class MainServer(config: Array<String>) : Server {
         //3. Finally start scheduler (tick, etc)
     }
 
-    private fun bind() {
+    fun bind() {
         //CountDownLatch (??)
         val latch = CountDownLatch(1)
         //Create a GameServer (main server)
-        prepareGameServer(latch)
+        val protocolProvider = ProtocolProvider()
+
+        val gameServer = GameServer(this, protocolProvider, latch)
+        gameServer.bind(Networking.getBindAddress(DEFAULT_PORT))
         //Create NetworkServer (its a type of GameServer)
         //Create a RemoteConsoleServer (remote console protocol)
-        bind(Networking.getBindAddress(DEFAULT_PORT))
         try {
             latch.await()
         } catch (exception: InterruptedException) {
@@ -62,22 +63,6 @@ class MainServer(config: Array<String>) : Server {
 
 
     }
-
-    private fun prepareGameServer(latch: CountDownLatch) {
-        val gameServer = GameServer(latch)
-
-    }
-
-    fun bind(address: InetSocketAddress): ChannelFuture {
-        return server.bind(address).addListener {
-            if (it.isSuccess) {
-                onBindSuccess(address)
-            } else {
-                onBindFailure(address, it.cause())
-            }
-        }
-    }
-
 
     private fun onBindSuccess(address: InetSocketAddress) {
         ip = address.hostString
