@@ -66,7 +66,7 @@ object GameServer {
 
         server.group(eventLoopGroup)
                 .channel(channel)
-                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.SO_BROADCAST, true)
                 .handler(GameServerHandler)
     }
 

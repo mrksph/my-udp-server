@@ -1,4 +1,4 @@
-package sample
+package client
 
 import DEFAULT_PORT
 import io.netty.bootstrap.Bootstrap

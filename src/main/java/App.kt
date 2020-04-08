@@ -1,7 +1,3 @@
-import game.GameServer
-import sample.GameClient
-
-
 const val DEFAULT_PORT = 31047
 
 fun main() {
