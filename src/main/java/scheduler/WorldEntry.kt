@@ -1,0 +1,4 @@
+package scheduler
+
+class WorldEntry {
+}

@@ -1,7 +1,7 @@
-package game
+package net.game
 
-import game.session.Session
 import io.netty.channel.Channel
+import net.MainServer
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch

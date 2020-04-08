@@ -1,4 +1,4 @@
-package game
+package net.game
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.Channel
@@ -14,6 +14,7 @@ import io.netty.channel.kqueue.KQueueServerSocketChannel
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import net.MainServer
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch

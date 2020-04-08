@@ -1,13 +1,21 @@
-package game
+package net
 
 import DEFAULT_PORT
 import config.Config
+import io.WorldStorageProviderFactory
+import io.format.FormatWorldStorageProvider
 import io.netty.bootstrap.Bootstrap
-import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.DatagramChannel
+import net.game.GameServer
+import net.session.SessionRegistry
 import protocol.ProtocolProvider
+import scheduler.ServerScheduler
+import scheduler.WorldScheduler
 import util.Networking
+import world.World
+import world.WorldCreator
+import java.io.File
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
@@ -19,10 +27,13 @@ class MainServer(config: Array<String>) : Server {
     private val server = Bootstrap()
     private lateinit var channel: Class<out DatagramChannel?>
     private lateinit var eventLoopGroup: EventLoopGroup
+    private var storageProviderFactory: WorldStorageProviderFactory? = null
+
+    val worlds: WorldScheduler = WorldScheduler()
+    val scheduler: ServerScheduler = ServerScheduler(this, worlds)
+
     var port = 0
     var ip: String? = null
-
-
 
     /**
      * The idea is to first create the world in the server then bind the server to receive connections
@@ -37,9 +48,22 @@ class MainServer(config: Array<String>) : Server {
 
     private fun start() {
         // 1. Load players info saved
+
+        // Set port and ip from config
+
+        // create storage provider
+        if (storageProviderFactory == null) {
+            storageProviderFactory = FormatWorldStorageProvider(File("s", "s"))
+        }
         //2. Create world
-        createWorld()
+        val worldCreator = WorldCreator.Builder()
+                .name("Hola")
+                .build()
+
+        createWorld(worldCreator)
+
         //3. Finally start scheduler (tick, etc)
+        scheduler.start()
     }
 
     fun bind() {
@@ -59,10 +83,6 @@ class MainServer(config: Array<String>) : Server {
         }
     }
 
-    private fun createWorld() {
-
-
-    }
 
     private fun onBindSuccess(address: InetSocketAddress) {
         ip = address.hostString
@@ -97,6 +117,24 @@ class MainServer(config: Array<String>) : Server {
     }
 
     override fun getPort() {
+    }
+
+    override fun addWorld(world: World) {}
+
+    override fun createWorld(worldCreator: WorldCreator): World {
+        val world = World(this,
+                worldCreator,
+                storageProviderFactory?.createWorldStorageProvider(worldCreator.name)
+        )
+        return world
+    }
+
+    override fun getWorldContainer(): File {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun getSessionRegistry(): SessionRegistry {
+        return SessionRegistry()
     }
 
 

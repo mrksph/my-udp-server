@@ -1,10 +1,11 @@
-package game
+package net.game
 
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.channel.socket.DatagramPacket
 import io.netty.util.CharsetUtil
+import net.game.GameServer
 
 class GameServerHandler(connectionManager: GameServer) : SimpleChannelInboundHandler<DatagramPacket>() {
     var counter = 0
