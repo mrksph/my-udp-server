@@ -14,5 +14,6 @@ interface Server {
     fun createWorld(worldCreator: WorldCreator): World
     fun getWorldContainer(): File
     fun loadConfig()
+    fun shutdown()
 
 }

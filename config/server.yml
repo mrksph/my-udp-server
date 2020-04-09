@@ -1,4 +1,12 @@
 server:
   ip: ''
   port: 31047
+  name: 'MyServer'
+  max-players: 2
+  online-mode: true
+game:
+  mode: 'pong'
+folders:
+  worlds: 'world'
+
 

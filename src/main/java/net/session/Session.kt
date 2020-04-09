@@ -1,10 +1,26 @@
 package net.session
 
-import net.game.GameServer
-import net.MainServer
-import io.netty.channel.Channel
-import protocol.ProtocolProvider
+import net.message.Message
 
-class Session(server: MainServer, protocolProvider: ProtocolProvider, channel: Channel, gameServer: GameServer) {
+interface Session {
+
+    fun messageReceived(message: Message)
+
+    fun getProcessor()
+
+    fun getProtocol()
+
+    fun send()
+
+    fun sendAll()
+
+    fun disconnect()
+
+    fun onReady()
+
+    fun onDisconnect()
+
+    fun pulse()
+
 
 }

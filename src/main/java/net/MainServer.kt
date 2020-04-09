@@ -7,11 +7,11 @@ import io.WorldStorageProvider
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import net.game.GameServer
-import net.session.SessionRegistry
 import protocol.ProtocolProvider
 import scheduler.ServerScheduler
 import scheduler.WorldScheduler
 import util.Networking
+import util.ThreadKiller
 import world.World
 import world.WorldCreator
 import java.io.File
@@ -28,9 +28,11 @@ class MainServer(config: Array<String>) : Server {
     private lateinit var storageProvider: WorldStorageProvider
     private lateinit var worldContainer: File
     private lateinit var worldFolder: String
+    private lateinit var gameServer: GameServer
 
     private val worlds: WorldScheduler = WorldScheduler()
     private val scheduler: ServerScheduler = ServerScheduler(this, worlds)
+    private var isShuttingDown: Boolean = false
 
     var port = 0
     var ip: String? = null
@@ -73,7 +75,7 @@ class MainServer(config: Array<String>) : Server {
         //Create a GameServer (main server)
         val protocolProvider = ProtocolProvider()
 
-        val gameServer = GameServer(this, protocolProvider, latch)
+        gameServer = GameServer(this, protocolProvider, latch)
         gameServer.bind(Networking.getBindAddress(DEFAULT_PORT))
         //Create NetworkServer (its a type of GameServer)
         //Create a RemoteConsoleServer (remote console protocol)
@@ -130,8 +132,20 @@ class MainServer(config: Array<String>) : Server {
         config.load()
     }
 
-    fun getSessionRegistry(): SessionRegistry = SessionRegistry()
+    override fun shutdown() {
+        if (isShuttingDown) {
+            return
+        }
+        isShuttingDown = true
 
+        //todo: iterate players list and kick them
+        //stops network servers
+        gameServer.shutdown()
+        //save world
+
+        scheduler.stop()
+        ThreadKiller().start()
+    }
 
 }
 

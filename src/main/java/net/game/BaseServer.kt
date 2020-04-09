@@ -15,6 +15,9 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import net.MainServer
+import net.session.BasicSession
+import net.session.Session
+import net.session.SessionRegistry
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
@@ -26,11 +29,13 @@ abstract class BaseServer(var server: MainServer,
     private val EPOLL_AVAILABLE = Epoll.isAvailable()
     private val KQUEUE_AVAILABLE = KQueue.isAvailable()
 
-    protected var bossGroup: EventLoopGroup
-    protected var workerGroup: EventLoopGroup
-    protected var bootstrap: ServerBootstrap
+    private var bossGroup: EventLoopGroup
+    private var workerGroup: EventLoopGroup
 
-    lateinit var channel: Channel
+    protected var bootstrap: ServerBootstrap
+    protected val sessions: SessionRegistry = SessionRegistry()
+
+    private lateinit var channel: Channel
 
     init {
         bossGroup = createBestEventLoopGroup()
@@ -59,7 +64,9 @@ abstract class BaseServer(var server: MainServer,
         latch.countDown()
     }
 
-    abstract fun newSession(channel: Channel)
+    abstract fun newSession(channel: Channel): BasicSession
+
+    abstract fun removeSession(session: Session)
 
     abstract fun onBindFailure(address: InetSocketAddress?, t: Throwable?)
 
@@ -99,7 +106,11 @@ abstract class BaseServer(var server: MainServer,
         }
     }
 
-    abstract fun shutdown()
+    fun shutdown() {
+        channel.close()
+        bootstrap.config().group().shutdownGracefully()
+        bootstrap.config().childGroup().shutdownGracefully()
+    }
 
 }
 
