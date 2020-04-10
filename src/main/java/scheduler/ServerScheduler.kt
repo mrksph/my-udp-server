@@ -6,7 +6,12 @@ import util.ThreadMaker
 import java.util.*
 import java.util.concurrent.*
 
-class ServerScheduler : Scheduler {
+class ServerScheduler(var server: MainServer,
+                      var worlds: WorldScheduler,
+                      var sessionRegistry: SessionRegistry,
+                      var primaryThread: Thread = Thread.currentThread()) : Scheduler {
+
+    constructor(server: MainServer, worlds: WorldScheduler) : this(server, worlds, server.sessionRegistry)
 
     private val inTickTask: Deque<Any> = ConcurrentLinkedDeque()
     val pulseFrequency: Long = 50
@@ -21,32 +26,17 @@ class ServerScheduler : Scheduler {
             LinkedBlockingDeque<Runnable>(),
             ThreadMaker
     )
-    private val inTickTaskCondition: Any = Any()
 
     private var tasks: ConcurrentHashMap<Int, Task> = ConcurrentHashMap()
 
-    private lateinit var sessionRegistry: SessionRegistry
-    private lateinit var primaryThread: Thread
-    private lateinit var worlds: WorldScheduler
-    private lateinit var server: MainServer
-
-    constructor(server: MainServer, worlds: WorldScheduler) {
-        ServerScheduler(server, worlds, server.sessionRegistry)
-    }
-
-    constructor(server: MainServer, worlds: WorldScheduler, sessionRegistry: SessionRegistry) {
-        this.server = server
-        this.worlds = worlds
-        this.sessionRegistry = sessionRegistry
-        this.primaryThread = Thread.currentThread()
-    }
 
     fun start() {
         executor.scheduleAtFixedRate({
             try {
                 pulse()
             } catch (e: Exception) {
-                System.err.println("ERROR")
+                e.printStackTrace()
+                System.err.println("Error while pulsing")
             }
         }, 0L, pulseFrequency, TimeUnit.MILLISECONDS)
     }

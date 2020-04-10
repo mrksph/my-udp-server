@@ -2,8 +2,9 @@ package config
 
 import java.io.File
 import java.io.IOException
+import java.util.*
 
-class Config(var configDirName: String,var configFilename: String, var parameters: HashMap<Key, Any>) {
+class Config(var configDirName: String,var configFilename: String, var parameters: EnumMap<Key, Any>) {
 
     private val defaultPort = 31047
 

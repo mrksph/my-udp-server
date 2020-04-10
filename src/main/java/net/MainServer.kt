@@ -2,7 +2,6 @@ package net
 
 import DEFAULT_PORT
 import config.Config
-import config.Key
 import io.StorageProviderFactory
 import io.WorldStorageProvider
 import io.netty.channel.EventLoopGroup
@@ -26,12 +25,17 @@ class MainServer(args: Array<String>) : Server {
     /**
      * Load Configuration when MainServer is instantiated
      */
-    private var config: Config = Config("config", "server-conf.yml", EnumMap(Key::class.java))
+    private var config: Config =
+            Config(
+                    "config",
+                    "server-conf.yml",
+                    EnumMap(Config.Key::class.java)
+            )
 
     private lateinit var channel: Class<out DatagramChannel?>
     private lateinit var eventLoopGroup: EventLoopGroup
     private lateinit var storageProvider: WorldStorageProvider
-    private val worldContainer: File = File(config.getString(Key.WORLD_FOLDER))
+    private val worldContainer: File = File(config.getString(Config.Key.WORLD_FOLDER))
     private lateinit var worldFolder: String
     private lateinit var gameServer: GameServer
 
