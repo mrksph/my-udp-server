@@ -2,10 +2,13 @@ package scheduler
 
 import net.MainServer
 import net.session.SessionRegistry
+import util.ThreadMaker
+import java.util.*
 import java.util.concurrent.*
 
 class ServerScheduler : Scheduler {
 
+    private val inTickTask: Deque<Any> = ConcurrentLinkedDeque()
     val pulseFrequency: Long = 50
     val maxThreads: Int = Runtime.getRuntime().availableProcessors()
 
@@ -18,6 +21,7 @@ class ServerScheduler : Scheduler {
             LinkedBlockingDeque<Runnable>(),
             ThreadMaker
     )
+    private val inTickTaskCondition: Any = Any()
 
     private var tasks: ConcurrentHashMap<Int, Task> = ConcurrentHashMap()
 
@@ -26,9 +30,8 @@ class ServerScheduler : Scheduler {
     private lateinit var worlds: WorldScheduler
     private lateinit var server: MainServer
 
-
     constructor(server: MainServer, worlds: WorldScheduler) {
-        ServerScheduler(server, worlds, server.getSessionRegistry())
+        ServerScheduler(server, worlds, server.sessionRegistry)
     }
 
     constructor(server: MainServer, worlds: WorldScheduler, sessionRegistry: SessionRegistry) {
@@ -48,7 +51,6 @@ class ServerScheduler : Scheduler {
         }, 0L, pulseFrequency, TimeUnit.MILLISECONDS)
     }
 
-
     fun stop() {
         cancelAllTasks()
         worlds.stop()
@@ -57,15 +59,42 @@ class ServerScheduler : Scheduler {
     }
 
     fun schedule(task: Task): Task {
-        tasks.put(task.id, task)
+        tasks[task.taskId] = task
         return task
     }
 
     fun pulse() {
         primaryThread = Thread.currentThread()
+        sessionRegistry.pulse()
+        // Run the relevant tasks.
+        val it: MutableIterator<Task> = tasks.values.iterator()
+        while (it.hasNext()) {
+            val task: Task = it.next()
+            when (task.shouldExecute()) {
+                TaskExecutionState.RUN -> if (task.isSync) {
+                    task.run()
+                } else {
+                    asyncTaskExecutor.submit(task)
+                }
+                TaskExecutionState.STOP -> it.remove()
+                else -> {
+                }
+            }
+        }
         println("PULSEEE")
-
     }
+
+    fun scheduleInTickExecution(run: Runnable) {
+        if (isPrimaryThread() || executor.isShutdown) {
+            run.run()
+        } else {
+            synchronized(this) {
+                inTickTask.addFirst(run)
+            }
+        }
+    }
+
+    fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
 
     override fun isQueued(taskId: Int): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -83,3 +112,4 @@ class ServerScheduler : Scheduler {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
+

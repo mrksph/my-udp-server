@@ -4,25 +4,29 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicInteger
 
-class Task(task: Runnable,
-           delay: Long,
-           period: Long) : FutureTask<Void>(task, null) {
+class Task(var task: Runnable,
+           private var delay: Long,
+           private var period: Long,
+           var isSync: Boolean) : FutureTask<Void>(task, null) {
 
-    private var taskId: Int = 0
+    private var lastExecutionState: TaskExecutionState = TaskExecutionState.WAIT
+    private val nextTaskId: AtomicInteger = AtomicInteger()
+    val taskId: Int
     private var counter: Long
-    private var period: Long
-    private var delay: Long
     private var description: String
     private lateinit var thread: Thread
-    private val nextTaskId: AtomicInteger = AtomicInteger()
 
 
     init {
         this.taskId = nextTaskId.getAndIncrement()
         this.description = task.toString()
-        this.delay = delay
-        this.period = period
         this.counter = 0
+    }
+
+    fun shouldExecute(): TaskExecutionState {
+        val execState = shouldExecuteUpdate()
+        lastExecutionState = execState
+        return execState
     }
 
     fun shouldExecuteUpdate(): TaskExecutionState {
@@ -62,5 +66,13 @@ class Task(task: Runnable,
         } catch (exception: InterruptedException) {
             //Task is done, we are in done() method
         }
+    }
+
+    override fun toString(): String {
+        return ("GlowTask{"
+                + "id=" + taskId
+                + ", sync=" + isSync
+                + ": " + description
+                + '}')
     }
 }

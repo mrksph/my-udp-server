@@ -3,7 +3,7 @@ package util
 import java.util.logging.Level
 import kotlin.system.exitProcess
 
-class ThreadKiller : Thread() {
+object ThreadKiller : Thread() {
 
     private val DELAY: Long = 8000
 

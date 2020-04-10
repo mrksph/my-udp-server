@@ -1,18 +1,22 @@
 package net.game
 
-import io.netty.bootstrap.ServerBootstrap
+import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.epoll.Epoll
+import io.netty.channel.epoll.EpollDatagramChannel
 import io.netty.channel.epoll.EpollEventLoopGroup
 import io.netty.channel.epoll.EpollServerSocketChannel
 import io.netty.channel.kqueue.KQueue
+import io.netty.channel.kqueue.KQueueDatagramChannel
 import io.netty.channel.kqueue.KQueueEventLoopGroup
 import io.netty.channel.kqueue.KQueueServerSocketChannel
 import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.ServerSocketChannel
+import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import net.MainServer
 import net.session.BasicSession
@@ -29,26 +33,25 @@ abstract class BaseServer(var server: MainServer,
     private val EPOLL_AVAILABLE = Epoll.isAvailable()
     private val KQUEUE_AVAILABLE = KQueue.isAvailable()
 
-    private var bossGroup: EventLoopGroup
-    private var workerGroup: EventLoopGroup
+    private var group: EventLoopGroup
 
-    protected var bootstrap: ServerBootstrap
+    protected var bootstrap: Bootstrap
     protected val sessions: SessionRegistry = SessionRegistry()
 
     private lateinit var channel: Channel
 
     init {
-        bossGroup = createBestEventLoopGroup()
-        workerGroup = createBestEventLoopGroup()
-        bootstrap = ServerBootstrap()
+        group = createBestEventLoopGroup()
 
-        bootstrap.group(bossGroup, workerGroup)
-                .channel(bestServerSocketChannel())
-                .childOption(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
+        bootstrap = Bootstrap()
+        //to configure a bootstrap we need a:
+        // a channel
+        bootstrap.group(group)
+                .channel(bestDatagramChannel())
+                .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
-    open fun bind(address: InetSocketAddress): ChannelFuture {
+    open fun bind(address: InetSocketAddress) {
         val channelFuture = this.bootstrap.bind(address).addListener {
             if (it.isSuccess) {
                 onBindSuccess(address)
@@ -57,7 +60,6 @@ abstract class BaseServer(var server: MainServer,
             }
         }
         channel = channelFuture.channel()
-        return channelFuture
     }
 
     open fun onBindSuccess(address: InetSocketAddress) {
@@ -106,10 +108,29 @@ abstract class BaseServer(var server: MainServer,
         }
     }
 
+    private fun bestDatagramChannel(): Class<out DatagramChannel?>? {
+        return when {
+            EPOLL_AVAILABLE -> {
+                EpollDatagramChannel::class.java
+            }
+            KQUEUE_AVAILABLE -> {
+                KQueueDatagramChannel::class.java
+            }
+            else -> {
+                NioDatagramChannel::class.java
+            }
+        }
+    }
+
     fun shutdown() {
         channel.close()
         bootstrap.config().group().shutdownGracefully()
-        bootstrap.config().childGroup().shutdownGracefully()
+
+        try {
+            bootstrap.config().group().terminationFuture().sync()
+        } catch (e: InterruptedException) {
+            System.err.println("Datagram server shutdown process interrupted!")
+        }
     }
 
 }

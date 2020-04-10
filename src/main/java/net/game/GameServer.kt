@@ -15,9 +15,8 @@ class GameServer(server: MainServer,
                  latch: CountDownLatch)
     : BaseServer(server, protocolProvider, latch) {
 
-
     init {
-        bootstrap.childHandler(GameServerHandler(this))
+        bootstrap.handler(GameServerHandler(this))
     }
 
     override fun onBindSuccess(address: InetSocketAddress) {

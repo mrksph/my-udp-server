@@ -14,9 +14,7 @@ class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHa
     override fun channelActive(ctx: ChannelHandlerContext) {
         val channel = ctx.channel()
         val session = connectionManager.newSession(channel)
-        if (!sessionReference.compareAndSet(null, session)) {
-            throw IllegalStateException("Session can't be set more than once")
-        }
+        check(sessionReference.compareAndSet(null, session)) { "Session may not be set more than once" }
         session.onReady()
     }
 
