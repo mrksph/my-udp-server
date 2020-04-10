@@ -83,7 +83,9 @@ class MainServer(args: Array<String>) : Server {
         val protocolProvider = ProtocolProvider()
         //Create a GameServer (main server)
         gameServer = GameServer(this, protocolProvider, latch)
-        gameServer.bind(Networking.getBindAddress(DEFAULT_PORT))
+        val address = Networking.getBindAddress(DEFAULT_PORT)
+        println("Binding Main Server... addres: $address")
+        gameServer.bind(address)
 
         //Create NetworkServer (its a type of GameServer)
         //Create a RemoteConsoleServer (remote console protocol)

@@ -61,13 +61,16 @@ class ServerScheduler(var server: MainServer,
         while (it.hasNext()) {
             val task: Task = it.next()
             when (task.shouldExecute()) {
-                TaskExecutionState.RUN -> if (task.isSync) {
-                    task.run()
-                } else {
-                    asyncTaskExecutor.submit(task)
-                }
-                TaskExecutionState.STOP -> it.remove()
+                TaskExecutionState.RUN ->
+                    if (task.isSync) {
+                        task.run()
+                    } else {
+                        asyncTaskExecutor.submit(task)
+                    }
+                TaskExecutionState.STOP ->
+                    it.remove()
                 else -> {
+                    // do nothing
                 }
             }
         }

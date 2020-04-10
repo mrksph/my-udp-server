@@ -25,7 +25,8 @@ class GameServer(server: MainServer,
         super.onBindSuccess(address)
     }
 
-    override fun onBindFailure(address: InetSocketAddress?, t: Throwable?) {
+    override fun onBindFailure(address: InetSocketAddress, t: Throwable) {
+        t.printStackTrace()
         exitProcess(1)
     }
 

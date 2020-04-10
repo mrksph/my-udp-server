@@ -2,7 +2,6 @@ package net.game
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
-import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.epoll.Epoll
@@ -46,9 +45,10 @@ abstract class BaseServer(var server: MainServer,
         bootstrap = Bootstrap()
         //to configure a bootstrap we need a:
         // a channel
-        bootstrap.group(group)
+        bootstrap
+                .group(group)
                 .channel(bestDatagramChannel())
-                .option(ChannelOption.SO_KEEPALIVE, true);
+//                .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
     open fun bind(address: InetSocketAddress) {
@@ -70,7 +70,7 @@ abstract class BaseServer(var server: MainServer,
 
     abstract fun removeSession(session: Session)
 
-    abstract fun onBindFailure(address: InetSocketAddress?, t: Throwable?)
+    abstract fun onBindFailure(address: InetSocketAddress, t: Throwable)
 
     private fun createBestEventLoopGroup(): EventLoopGroup {
         return when {
