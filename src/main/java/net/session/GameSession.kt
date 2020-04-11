@@ -7,10 +7,10 @@ import net.game.GameServer
 import net.message.Message
 import net.protocol.Protocol
 
-class Session(server: MainServer,
-              protocol: Protocol,
-              channel: Channel,
-              gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
+class GameSession(server: MainServer,
+                  protocol: Protocol,
+                  channel: Channel,
+                  gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
 
     private lateinit var player: BasicPlayer
 

@@ -13,7 +13,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
 import net.MainServer
-import net.session.Session
+import net.session.GameSession
 import net.session.BaseSession
 import net.session.SessionRegistry
 import protocol.ProtocolProvider
@@ -58,7 +58,7 @@ abstract class BaseServer(var server: MainServer,
         latch.countDown()
     }
 
-    abstract fun newSession(channel: Channel): Session
+    abstract fun newSession(channel: Channel): GameSession
 
     abstract fun removeSession(baseSession: BaseSession)
 

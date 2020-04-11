@@ -4,18 +4,18 @@ import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import net.message.Message
-import net.session.Session
+import net.session.GameSession
 import java.util.concurrent.atomic.AtomicReference
 
 class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHandler<Message>() {
 
     lateinit var channel: Channel
-    private val sessionReference: AtomicReference<Session> = AtomicReference<Session>(null)
+    private val gameSessionReference: AtomicReference<GameSession> = AtomicReference<GameSession>(null)
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         channel = ctx.channel()
         val session = connectionManager.newSession(channel)
-        check(sessionReference.compareAndSet(null, session)) { "Session may not be set more than once" }
+        check(gameSessionReference.compareAndSet(null, session)) { "Session may not be set more than once" }
         session.onReady()
     }
 
@@ -51,7 +51,7 @@ class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHa
     }
 
 
-    override fun channelInactive(ctx: ChannelHandlerContext?) = sessionReference.get().onDisconnect()
+    override fun channelInactive(ctx: ChannelHandlerContext?) = gameSessionReference.get().onDisconnect()
 
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {
