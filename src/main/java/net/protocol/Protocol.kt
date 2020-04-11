@@ -1,5 +1,6 @@
 package net.protocol
 
+import net.codec.Codec
 import net.message.Message
 
 interface Protocol {

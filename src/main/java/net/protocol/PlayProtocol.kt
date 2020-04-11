@@ -1,3 +1,3 @@
 package net.protocol
 
-class PlayProtocol : AbstractProtocol("PLAY", 1)
+class PlayProtocol : BaseProtocol("PLAY", 1)

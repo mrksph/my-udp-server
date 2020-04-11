@@ -4,7 +4,7 @@ import io.netty.channel.Channel
 import net.MainServer
 import net.session.BasicSession
 import net.session.Session
-import protocol.PlayProtocol
+import net.protocol.play.PlayProtocol
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch

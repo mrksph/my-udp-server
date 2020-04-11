@@ -1,7 +1,7 @@
 package net.service
 
 import net.message.Message
-import net.protocol.Codec
+import net.codec.Codec
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap

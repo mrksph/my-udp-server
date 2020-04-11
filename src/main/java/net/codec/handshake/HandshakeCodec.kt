@@ -1,7 +1,8 @@
-package net.protocol
+package net.codec.handshake
 
 import io.netty.buffer.ByteBuf
-import net.message.HandshakeMessage
+import net.codec.Codec
+import net.message.handshake.HandshakeMessage
 
 class HandshakeCodec : Codec<HandshakeMessage> {
     override fun encode(var1: ByteBuf): HandshakeMessage {

@@ -1,4 +1,6 @@
-package net.message
+package net.message.handshake
+
+import net.message.Message
 
 data class HandshakeMessage(val version: Int,
                             val address: String,

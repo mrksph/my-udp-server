@@ -1,12 +1,13 @@
 package net.protocol
 
+import net.codec.Codec
 import net.message.Message
 import net.message.MessageHandler
 import net.service.CodeLookupService
 import net.service.HandlerLookupService
 
 
-abstract class AbstractProtocol(var name: String, highestOpCode: Int) : Protocol {
+abstract class BaseProtocol(var name: String, highestOpCode: Int) : Protocol {
 
     var inboundCodecs: CodeLookupService = CodeLookupService(highestOpCode + 1)
     var outboundCodecs: CodeLookupService = CodeLookupService(highestOpCode + 1)

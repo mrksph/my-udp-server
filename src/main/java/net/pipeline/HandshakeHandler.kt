@@ -1,6 +1,6 @@
-package net.protocol
+package net.pipeline
 
-import net.message.HandshakeMessage
+import net.message.handshake.HandshakeMessage
 import net.message.MessageHandler
 import net.session.BasicSession
 

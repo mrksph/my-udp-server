@@ -1,4 +1,4 @@
-package net.protocol
+package net.codec
 
 import io.netty.buffer.ByteBuf
 import net.message.Message

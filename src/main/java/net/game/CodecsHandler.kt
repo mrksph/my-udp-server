@@ -5,7 +5,7 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToMessageCodec
 import net.message.Message
-import net.protocol.Codec
+import net.codec.Codec
 import net.protocol.Protocol
 
 class CodecsHandler(private var protocol: Protocol) : MessageToMessageCodec<ByteBuf, Message>() {
