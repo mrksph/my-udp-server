@@ -2,21 +2,16 @@ package net.game
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
-import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.epoll.Epoll
 import io.netty.channel.epoll.EpollDatagramChannel
 import io.netty.channel.epoll.EpollEventLoopGroup
-import io.netty.channel.epoll.EpollServerSocketChannel
 import io.netty.channel.kqueue.KQueue
 import io.netty.channel.kqueue.KQueueDatagramChannel
 import io.netty.channel.kqueue.KQueueEventLoopGroup
-import io.netty.channel.kqueue.KQueueServerSocketChannel
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
-import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
-import io.netty.channel.socket.nio.NioServerSocketChannel
 import net.MainServer
 import net.session.BasicSession
 import net.session.Session
@@ -43,12 +38,9 @@ abstract class BaseServer(var server: MainServer,
         group = createBestEventLoopGroup()
 
         bootstrap = Bootstrap()
-        //to configure a bootstrap we need a:
-        // a channel
         bootstrap
                 .group(group)
                 .channel(bestDatagramChannel())
-//                .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
     open fun bind(address: InetSocketAddress) {
@@ -94,20 +86,6 @@ abstract class BaseServer(var server: MainServer,
      *
      * @return the "best" server socket channel available
      */
-    private fun bestServerSocketChannel(): Class<out ServerSocketChannel?>? {
-        return when {
-            EPOLL_AVAILABLE -> {
-                EpollServerSocketChannel::class.java
-            }
-            KQUEUE_AVAILABLE -> {
-                KQueueServerSocketChannel::class.java
-            }
-            else -> {
-                NioServerSocketChannel::class.java
-            }
-        }
-    }
-
     private fun bestDatagramChannel(): Class<out DatagramChannel?>? {
         return when {
             EPOLL_AVAILABLE -> {

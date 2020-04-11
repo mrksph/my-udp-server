@@ -2,7 +2,6 @@ package scheduler
 
 import world.World
 import java.util.concurrent.Phaser
-import java.util.logging.Level
 
 private class WorldThread(
         private val world: World,

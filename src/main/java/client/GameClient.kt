@@ -3,7 +3,6 @@ package client
 //import io.netty.channel.socket.DatagramPacket
 import DEFAULT_PORT
 import io.netty.channel.nio.NioEventLoopGroup
-import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -24,16 +23,17 @@ class GameClient {
 
             val socket = DatagramSocket()
             var buf: ByteArray = "hello".toByteArray()
+
             val packet = DatagramPacket(buf, buf.size, localHost, DEFAULT_PORT)
 
             while (loop) {
                 if (counter == 15) loop = false
                 try {
                     socket.send(packet)
-                } catch (ex: IOException) {
-                    ex.printStackTrace()
+                } catch (e: Throwable) {
+                    e.printStackTrace()
                 }
-                println(counter)
+                println(String(buf))
                 counter++
             }
         } finally {

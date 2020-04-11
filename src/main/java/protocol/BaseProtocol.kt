@@ -1,5 +1,7 @@
 package protocol
 
-abstract class BaseProtocol {
-    lateinit var name : String
+import net.protocol.Protocol
+
+abstract class BaseProtocol : Protocol {
+    lateinit var name: String
 }

@@ -25,7 +25,7 @@ class WorldScheduler {
 
     }
 
-    fun beginTick() : Int {
+    fun beginTick(): Int {
         tickEnd.awaitAdvanceInterruptibly(currentTick) // Make sure previous tick is complete
         return tickBegin.arrive().also { currentTick = it }
     }

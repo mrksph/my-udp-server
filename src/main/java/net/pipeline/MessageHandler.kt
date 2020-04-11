@@ -18,11 +18,9 @@ class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHa
         session.onReady()
     }
 
-    override fun channelInactive(ctx: ChannelHandlerContext?)
-            = sessionReference.get().onDisconnect()
+    override fun channelInactive(ctx: ChannelHandlerContext?) = sessionReference.get().onDisconnect()
 
-    override fun channelRead0(context: ChannelHandlerContext, message: Message)
-            = sessionReference.get().messageReceived(message)
+    override fun channelRead0(context: ChannelHandlerContext, message: Message) = sessionReference.get().messageReceived(message)
 
 
 }

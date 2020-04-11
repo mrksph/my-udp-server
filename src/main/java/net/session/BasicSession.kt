@@ -1,15 +1,18 @@
 package net.session
 
+import entity.BasicPlayer
 import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
 import net.message.Message
-import protocol.ProtocolProvider
+import net.protocol.Protocol
 
 class BasicSession(server: MainServer,
-                   protocolProvider: ProtocolProvider,
+                   protocol: Protocol,
                    channel: Channel,
-                   gameServer: GameServer) : Session{
+                   gameServer: GameServer) : Session(server, protocol, channel, gameServer) {
+
+    private lateinit var player: BasicPlayer
 
     override fun messageReceived(message: Message) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -27,8 +30,8 @@ class BasicSession(server: MainServer,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun send() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun send(message: Message) {
+
     }
 
     override fun sendAll() {
@@ -40,7 +43,7 @@ class BasicSession(server: MainServer,
     }
 
     override fun onReady() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onDisconnect() {

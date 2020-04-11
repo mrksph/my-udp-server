@@ -1,6 +1,5 @@
 package util
 
-import java.util.logging.Level
 import kotlin.system.exitProcess
 
 object ThreadKiller : Thread() {

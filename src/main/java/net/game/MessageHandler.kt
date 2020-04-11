@@ -3,15 +3,13 @@ package net.game
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
-import io.netty.channel.socket.DatagramPacket
+import net.message.Message
 import net.session.BasicSession
 import java.util.concurrent.atomic.AtomicReference
 
-class GameServerHandler(var connectionManager: GameServer) : SimpleChannelInboundHandler<DatagramPacket>() {
-    var counter = 0
+class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHandler<Message>() {
 
     lateinit var channel: Channel
-
     private val sessionReference: AtomicReference<BasicSession> = AtomicReference<BasicSession>(null)
 
     override fun channelActive(ctx: ChannelHandlerContext) {
@@ -21,15 +19,20 @@ class GameServerHandler(var connectionManager: GameServer) : SimpleChannelInboun
         session.onReady()
     }
 
-    override fun channelRead0(context: ChannelHandlerContext, packet: DatagramPacket) {
-        val message = packet.content()
-        if (message.readableBytes() < 7) {
-            return
-        }
 
-        val type = message.readByte()
-
+    override fun channelRead0(p0: ChannelHandlerContext?, p1: Message) {
+//        val content = packet.content()
 //
+//        val message1 = content.toString(CharsetUtil.UTF_8)
+//        context.fireUserEventTriggered("W")
+//        println("message1 $message1")
+//
+//        if (content.readableBytes() < 7) {
+//            return
+//        }
+//
+//
+//        val type = content.readByte()
 //        System.err.println(packet)
 //        if ("QOTM?" == packet.content().toString(CharsetUtil.UTF_8)) {
 //            counter++
@@ -42,8 +45,13 @@ class GameServerHandler(var connectionManager: GameServer) : SimpleChannelInboun
 //        }
     }
 
-    override fun channelInactive(ctx: ChannelHandlerContext?)
-            = sessionReference.get().onDisconnect()
+
+    override fun userEventTriggered(ctx: ChannelHandlerContext?, evt: Any?) {
+        println(evt.toString())
+    }
+
+
+    override fun channelInactive(ctx: ChannelHandlerContext?) = sessionReference.get().onDisconnect()
 
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {
@@ -53,5 +61,6 @@ class GameServerHandler(var connectionManager: GameServer) : SimpleChannelInboun
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
         cause.printStackTrace()
     }
+
 
 }

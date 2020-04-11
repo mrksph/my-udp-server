@@ -2,7 +2,6 @@ package net.pipeline
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.DatagramChannel
-import net.MainServer
 import net.game.GameServer
 
 

@@ -1,4 +1,3 @@
 package scheduler
 
-class WorldEntry {
-}
+class WorldEntry

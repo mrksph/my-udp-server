@@ -4,7 +4,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class Config(var configDirName: String,var configFilename: String, var parameters: EnumMap<Key, Any>) {
+class Config(var configDirName: String, var configFilename: String, var parameters: EnumMap<Key, Any>) {
 
     private val defaultPort = 31047
 
@@ -53,9 +53,10 @@ class Config(var configDirName: String,var configFilename: String, var parameter
         parameters[key] = parameters[key].toString()
         return ""
     }
+
     enum class Key(private val path: String, private val def: Any) {
-        SERVER_IP("server.ip",""),
-        SERVER_PORT("server.ip",""),
-        WORLD_FOLDER("folders.world","world")
+        SERVER_IP("server.ip", ""),
+        SERVER_PORT("server.ip", ""),
+        WORLD_FOLDER("folders.world", "world")
     }
 }

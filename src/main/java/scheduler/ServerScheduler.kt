@@ -45,7 +45,6 @@ class ServerScheduler(var server: MainServer,
         cancelAllTasks()
         worlds.stop()
         executor.shutdownNow()
-
     }
 
     fun schedule(task: Task): Task {
@@ -74,7 +73,7 @@ class ServerScheduler(var server: MainServer,
                 }
             }
         }
-        println("PULSEEE")
+        println("[scheduler] pulse")
     }
 
     fun scheduleInTickExecution(run: Runnable) {

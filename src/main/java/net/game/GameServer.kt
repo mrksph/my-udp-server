@@ -4,7 +4,7 @@ import io.netty.channel.Channel
 import net.MainServer
 import net.session.BasicSession
 import net.session.Session
-import net.session.SessionRegistry
+import protocol.PlayProtocol
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
@@ -16,7 +16,7 @@ class GameServer(server: MainServer,
     : BaseServer(server, protocolProvider, latch) {
 
     init {
-        bootstrap.handler(GameServerHandler(this))
+        bootstrap.handler(GameServerChannelStarter(this))
     }
 
     override fun onBindSuccess(address: InetSocketAddress) {
@@ -30,8 +30,8 @@ class GameServer(server: MainServer,
         exitProcess(1)
     }
 
-    override  fun newSession(channel: Channel): BasicSession {
-        val session = BasicSession(server, protocolProvider, channel, this)
+    override fun newSession(channel: Channel): BasicSession {
+        val session = BasicSession(server, PlayProtocol(), channel, this)
         sessions.add(session)
         return session
     }

@@ -81,9 +81,10 @@ class MainServer(args: Array<String>) : Server {
     fun bind() {
         val latch = CountDownLatch(1)
         val protocolProvider = ProtocolProvider()
+        val address = Networking.getBindAddress(DEFAULT_PORT)
+
         //Create a GameServer (main server)
         gameServer = GameServer(this, protocolProvider, latch)
-        val address = Networking.getBindAddress(DEFAULT_PORT)
         println("Binding Main Server... addres: $address")
         gameServer.bind(address)
 

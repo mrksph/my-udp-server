@@ -1,4 +1,3 @@
-import config.Config
 import net.MainServer
 import kotlin.system.exitProcess
 

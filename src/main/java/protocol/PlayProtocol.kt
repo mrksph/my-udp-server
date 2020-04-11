@@ -1,5 +1,3 @@
 package protocol
 
-class PlayProtocol : BaseProtocol() {
-
-}
+class PlayProtocol : BaseProtocol()
