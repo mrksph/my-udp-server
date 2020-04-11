@@ -3,15 +3,15 @@ package net.codec
 import io.netty.buffer.ByteBuf
 import net.message.GameMessage
 
-interface Codec<T : GameMessage> {
+interface GameCodec<T : GameMessage> {
 
     fun encode(var1: ByteBuf): T
 
     fun decode(var1: ByteBuf, var2: T): ByteBuf
 
-    class CodecRegistration(private val opcode: Int, private val codec: Codec<*>) {
+    class CodecRegistration(private val opcode: Int, private val codec: GameCodec<*>) {
 
-        fun <M : GameMessage> getCodec(): Codec<*> {
+        fun <M : GameMessage> getCodec(): GameCodec<*> {
             return codec
         }
 

@@ -5,10 +5,10 @@ import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
 import net.message.GameMessage
-import net.protocol.Protocol
+import net.protocol.GameProtocol
 
 class GameSession(server: MainServer,
-                  protocol: Protocol,
+                  protocol: GameProtocol,
                   channel: Channel,
                   gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
 

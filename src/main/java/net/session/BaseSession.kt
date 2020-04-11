@@ -4,10 +4,10 @@ import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
 import net.message.GameMessage
-import net.protocol.Protocol
+import net.protocol.GameProtocol
 
 abstract class BaseSession(server: MainServer,
-                           protocol: Protocol,
+                           protocol: GameProtocol,
                            channel: Channel,
                            gameServer: GameServer) {
 

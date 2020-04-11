@@ -1,7 +1,7 @@
 package net.service
 
 import net.message.GameMessage
-import net.codec.Codec
+import net.codec.GameCodec
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -9,9 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class CodecLookupService(size: Int) {
 
-    private lateinit var messages: ConcurrentMap<Class<out GameMessage>, Codec.CodecRegistration>
-    private var opcodes: ConcurrentMap<Int, Codec<GameMessage>>?
-    private var opcodeTable: Array<Codec<GameMessage>?>
+    private lateinit var messages: ConcurrentMap<Class<out GameMessage>, GameCodec.CodecRegistration>
+    private var opcodes: ConcurrentMap<Int, GameCodec<GameMessage>>?
+    private var opcodeTable: Array<GameCodec<GameMessage>?>
     private var nextId: AtomicInteger
 
     init {
@@ -19,7 +19,7 @@ class CodecLookupService(size: Int) {
             throw IllegalArgumentException("Size cannot be < 0!")
         } else {
             if (size == 0) {
-                this.opcodes = ConcurrentHashMap<Int, Codec<GameMessage>>()
+                this.opcodes = ConcurrentHashMap<Int, GameCodec<GameMessage>>()
                 this.opcodeTable = emptyArray()
             } else {
                 this.opcodeTable = arrayOfNulls(size)
@@ -32,12 +32,12 @@ class CodecLookupService(size: Int) {
     @Throws(InstantiationException::class,
             IllegalAccessException::class,
             InvocationTargetException::class)
-    fun <M : GameMessage, C : Codec<in M>> bind(messageClass: Class<M>, codec: Class<C>, opcode: Int) {
+    fun <M : GameMessage, C : GameCodec<in M>> bind(messageClass: Class<M>, codec: Class<C>, opcode: Int) {
         val reg = messages[messageClass]
         //TODO: bind
     }
 
-    fun <M : GameMessage?> find(clazz: Class<M>): Codec.CodecRegistration? {
+    fun <M : GameMessage?> find(clazz: Class<M>): GameCodec.CodecRegistration? {
         return messages[clazz]
     }
 

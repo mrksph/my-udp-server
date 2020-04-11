@@ -5,14 +5,14 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToMessageCodec
 import net.message.GameMessage
-import net.codec.Codec
-import net.protocol.Protocol
+import net.codec.GameCodec
+import net.protocol.GameProtocol
 
-class CodecsHandler(private var protocol: Protocol) : MessageToMessageCodec<ByteBuf, GameMessage>() {
+class CodecsHandler(private var protocol: GameProtocol) : MessageToMessageCodec<ByteBuf, GameMessage>() {
 
     override fun encode(context: ChannelHandlerContext, message: GameMessage, out: MutableList<Any>) {
         // find codec
-        val reg: Codec.CodecRegistration = protocol.getCodecRegistration(message.javaClass)
+        val reg: GameCodec.CodecRegistration = protocol.getCodecRegistration(message.javaClass)
 
         val headerBuf: ByteBuf = context.alloc().buffer(8)
         val messageBuf: ByteBuf = context.alloc().buffer()
