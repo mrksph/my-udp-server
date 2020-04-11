@@ -13,8 +13,8 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
 import net.MainServer
-import net.session.BasicSession
 import net.session.Session
+import net.session.BaseSession
 import net.session.SessionRegistry
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
@@ -58,9 +58,9 @@ abstract class BaseServer(var server: MainServer,
         latch.countDown()
     }
 
-    abstract fun newSession(channel: Channel): BasicSession
+    abstract fun newSession(channel: Channel): Session
 
-    abstract fun removeSession(session: Session)
+    abstract fun removeSession(baseSession: BaseSession)
 
     abstract fun onBindFailure(address: InetSocketAddress, t: Throwable)
 

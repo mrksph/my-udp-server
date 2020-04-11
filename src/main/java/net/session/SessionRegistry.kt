@@ -5,12 +5,12 @@ import java.util.concurrent.ConcurrentMap
 
 class SessionRegistry {
 
-    private val sessions: ConcurrentMap<Session, Boolean> = ConcurrentHashMap()
+    private val sessions: ConcurrentMap<BaseSession, Boolean> = ConcurrentHashMap()
 
-    fun add(session: Session) = sessions.put(session, true)
+    fun add(baseSession: BaseSession) = sessions.put(baseSession, true)
 
     fun pulse() = sessions.keys.forEach { it.pulse() }
 
-    fun remove(session: Session) = sessions.remove(session)
+    fun remove(baseSession: BaseSession) = sessions.remove(baseSession)
 
 }

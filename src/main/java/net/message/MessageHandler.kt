@@ -1,7 +1,7 @@
 package net.message
 
-import net.session.Session
+import net.session.BaseSession
 
-interface MessageHandler<S : Session, T : Message> {
+interface MessageHandler<S : BaseSession, T : Message> {
     fun handle(session: S, message: T)
 }

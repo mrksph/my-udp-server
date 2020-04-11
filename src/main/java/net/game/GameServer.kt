@@ -2,8 +2,8 @@ package net.game
 
 import io.netty.channel.Channel
 import net.MainServer
-import net.session.BasicSession
 import net.session.Session
+import net.session.BaseSession
 import net.protocol.play.PlayProtocol
 import protocol.ProtocolProvider
 import java.net.InetSocketAddress
@@ -30,13 +30,13 @@ class GameServer(server: MainServer,
         exitProcess(1)
     }
 
-    override fun newSession(channel: Channel): BasicSession {
-        val session = BasicSession(server, PlayProtocol(), channel, this)
+    override fun newSession(channel: Channel): Session {
+        val session = Session(server, PlayProtocol(), channel, this)
         sessions.add(session)
         return session
     }
 
-    override fun removeSession(session: Session) {
-        sessions.remove(session)
+    override fun removeSession(baseSession: BaseSession) {
+        sessions.remove(baseSession)
     }
 }

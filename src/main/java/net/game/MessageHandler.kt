@@ -4,13 +4,13 @@ import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import net.message.Message
-import net.session.BasicSession
+import net.session.Session
 import java.util.concurrent.atomic.AtomicReference
 
 class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHandler<Message>() {
 
     lateinit var channel: Channel
-    private val sessionReference: AtomicReference<BasicSession> = AtomicReference<BasicSession>(null)
+    private val sessionReference: AtomicReference<Session> = AtomicReference<Session>(null)
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         channel = ctx.channel()

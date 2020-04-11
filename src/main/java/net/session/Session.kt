@@ -1,33 +1,54 @@
 package net.session
 
+import entity.BasicPlayer
 import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
 import net.message.Message
 import net.protocol.Protocol
 
-abstract class Session(server: MainServer,
-                       protocol: Protocol,
-                       channel: Channel,
-                       gameServer: GameServer) {
+class Session(server: MainServer,
+              protocol: Protocol,
+              channel: Channel,
+              gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
 
-    abstract fun messageReceived(message: Message)
+    private lateinit var player: BasicPlayer
 
-    abstract fun getProcessor()
+    override fun messageReceived(message: Message) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    abstract fun getProtocol()
+    override fun pulse() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    abstract fun send(message: Message)
+    override fun getProcessor() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    abstract fun sendAll()
+    override fun getProtocol() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    abstract fun disconnect()
+    override fun send(message: Message) {
 
-    abstract fun onReady()
+    }
 
-    abstract fun onDisconnect()
+    override fun sendAll() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    abstract fun pulse()
+    override fun disconnect() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onReady() {
+
+    }
+
+    override fun onDisconnect() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
 }
