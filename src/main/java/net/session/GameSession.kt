@@ -4,7 +4,7 @@ import entity.BasicPlayer
 import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
-import net.message.Message
+import net.message.GameMessage
 import net.protocol.Protocol
 
 class GameSession(server: MainServer,
@@ -14,7 +14,7 @@ class GameSession(server: MainServer,
 
     private lateinit var player: BasicPlayer
 
-    override fun messageReceived(message: Message) {
+    override fun messageReceived(message: GameMessage) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -30,7 +30,7 @@ class GameSession(server: MainServer,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun send(message: Message) {
+    override fun send(message: GameMessage) {
 
     }
 

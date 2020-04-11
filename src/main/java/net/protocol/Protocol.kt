@@ -1,8 +1,8 @@
 package net.protocol
 
 import net.codec.Codec
-import net.message.Message
+import net.message.GameMessage
 
 interface Protocol {
-    fun <M : Message> getCodecRegistration(clazz: Class<M>): Codec.CodecRegistration
+    fun <M : GameMessage> getCodecRegistration(clazz: Class<M>): Codec.CodecRegistration
 }

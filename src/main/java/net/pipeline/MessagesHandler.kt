@@ -1,13 +1,14 @@
-package net.game
+package net.pipeline
 
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
-import net.message.Message
+import net.game.GameServer
+import net.message.GameMessage
 import net.session.GameSession
 import java.util.concurrent.atomic.AtomicReference
 
-class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHandler<Message>() {
+class MessagesHandler(private var connectionManager: GameServer) : SimpleChannelInboundHandler<GameMessage>() {
 
     lateinit var channel: Channel
     private val gameSessionReference: AtomicReference<GameSession> = AtomicReference<GameSession>(null)
@@ -19,8 +20,7 @@ class MessageHandler(var connectionManager: GameServer) : SimpleChannelInboundHa
         session.onReady()
     }
 
-
-    override fun channelRead0(p0: ChannelHandlerContext?, p1: Message) {
+    override fun channelRead0(p0: ChannelHandlerContext?, p1: GameMessage) {
 //        val content = packet.content()
 //
 //        val message1 = content.toString(CharsetUtil.UTF_8)

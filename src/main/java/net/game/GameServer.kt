@@ -2,6 +2,7 @@ package net.game
 
 import io.netty.channel.Channel
 import net.MainServer
+import net.pipeline.GameChannelInitializer
 import net.session.GameSession
 import net.session.BaseSession
 import net.protocol.play.PlayProtocol
@@ -16,7 +17,7 @@ class GameServer(server: MainServer,
     : BaseServer(server, protocolProvider, latch) {
 
     init {
-        bootstrap.handler(GameServerChannelStarter(this))
+        bootstrap.handler(GameChannelInitializer(this))
     }
 
     override fun onBindSuccess(address: InetSocketAddress) {

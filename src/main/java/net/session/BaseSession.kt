@@ -3,7 +3,7 @@ package net.session
 import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
-import net.message.Message
+import net.message.GameMessage
 import net.protocol.Protocol
 
 abstract class BaseSession(server: MainServer,
@@ -11,13 +11,13 @@ abstract class BaseSession(server: MainServer,
                            channel: Channel,
                            gameServer: GameServer) {
 
-    abstract fun messageReceived(message: Message)
+    abstract fun messageReceived(message: GameMessage)
 
     abstract fun getProcessor()
 
     abstract fun getProtocol()
 
-    abstract fun send(message: Message)
+    abstract fun send(message: GameMessage)
 
     abstract fun sendAll()
 

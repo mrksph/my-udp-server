@@ -1,9 +1,9 @@
 package net.codec
 
 import io.netty.buffer.ByteBuf
-import net.message.Message
+import net.message.GameMessage
 
-interface Codec<T : Message> {
+interface Codec<T : GameMessage> {
 
     fun encode(var1: ByteBuf): T
 
@@ -11,7 +11,7 @@ interface Codec<T : Message> {
 
     class CodecRegistration(private val opcode: Int, private val codec: Codec<*>) {
 
-        fun <M : Message> getCodec(): Codec<*> {
+        fun <M : GameMessage> getCodec(): Codec<*> {
             return codec
         }
 

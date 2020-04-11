@@ -2,7 +2,7 @@ package net.protocol.handshake
 
 import net.codec.handshake.HandshakeCodec
 import net.message.handshake.HandshakeMessage
-import net.pipeline.HandshakeHandler
+import net.handler.handshake.HandshakeHandlerSession
 import net.protocol.BaseProtocol
 
 class HandshakeProtocol
@@ -12,7 +12,7 @@ class HandshakeProtocol
         inbound(0x00,
                 HandshakeMessage::class.java,
                 HandshakeCodec::class.java,
-                HandshakeHandler())
+                HandshakeHandlerSession())
     }
 
 }

@@ -1,11 +1,11 @@
 package net.message.handshake
 
-import net.message.Message
+import net.message.GameMessage
 
 data class HandshakeMessage(val version: Int,
                             val address: String,
                             val port: Int,
-                            val state: Int) : Message {
+                            val state: Int) : GameMessage {
 
 
     override fun toString(): String {

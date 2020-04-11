@@ -1,10 +1,10 @@
-package net.pipeline
+package net.handler.handshake
 
 import net.message.handshake.HandshakeMessage
-import net.message.MessageHandler
+import net.message.GameMessageHandler
 import net.session.GameSession
 
-class HandshakeHandler : MessageHandler<GameSession, HandshakeMessage> {
+class HandshakeHandlerSession : GameMessageHandler<GameSession, HandshakeMessage> {
     override fun handle(gameSession: GameSession, message: HandshakeMessage) {
         //
     }

@@ -2,6 +2,6 @@ package net.message
 
 import net.session.BaseSession
 
-interface MessageHandler<S : BaseSession, T : Message> {
+interface GameMessageHandler<S : BaseSession, T : GameMessage> {
     fun handle(session: S, message: T)
 }
