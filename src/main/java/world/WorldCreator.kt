@@ -1,9 +1,12 @@
 package world
 
-class WorldCreator private constructor(val name: String?) {
+import generator.WorldGenerator
 
-    data class Builder(var name: String? = null) {
+class WorldCreator private constructor(val name: String?, val generator: WorldGenerator) {
+
+    data class Builder(var name: String? = null, var generator: WorldGenerator = WorldGenerator()) {
         fun name(name: String) = apply { this.name = name }
-        fun build() = WorldCreator(name)
+        fun generator(generator: WorldGenerator) = apply { this.generator = generator }
+        fun build() = WorldCreator(name, generator)
     }
 }

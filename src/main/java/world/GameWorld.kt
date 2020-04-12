@@ -1,6 +1,7 @@
 package world
 
 import entity.EntityManager
+import generator.WorldGenerator
 import io.WorldStorageProvider
 import net.MainServer
 import java.util.*
@@ -9,6 +10,7 @@ class GameWorld(val server: MainServer,
                 val worldCreator: WorldCreator,
                 val storage: WorldStorageProvider) {
 
+    private var generator: WorldGenerator
     val entityManager : EntityManager = EntityManager()
 
     lateinit var name: String
@@ -19,6 +21,7 @@ class GameWorld(val server: MainServer,
         storage.setWorld(this)
         server.addWorld(this)
         initialized = true
+        generator = worldCreator.generator
     }
 
     fun pulse() {

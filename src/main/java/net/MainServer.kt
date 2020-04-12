@@ -4,6 +4,7 @@ import DEFAULT_PORT
 import config.Config
 import entity.EntityIdManager
 import entity.EntityManager
+import generator.WorldGenerator
 import io.StorageProviderFactory
 import net.game.GameServer
 import net.protocol.ProtocolProvider
@@ -49,6 +50,7 @@ class MainServer(args: Array<String>) : Server {
 
 
     init {
+        ServerProvider.registerServer(this)
         loadConfig()
     }
 
@@ -71,8 +73,10 @@ class MainServer(args: Array<String>) : Server {
         this.port = config.getInt(Config.Key.SERVER_PORT)
 
         //2. Create world (also create a seed and define a type)
+
         val worldCreator = WorldCreator.Builder()
                 .name("world-1")
+                .generator(WorldGenerator()) // TODO: Implement generator
                 .build()
 
         createWorld(worldCreator)
