@@ -1,21 +1,25 @@
 package io
 
-import world.World
+import io.service.GameMetadataService
+import world.GameWorld
 import java.io.File
 
-class WorldStorageProvider(private var folder: File) : StorageProvider {
-    private lateinit var world: World
+//TODO : AQUI VAN LOS SERVICIOS PARA ESCRIBIR EN DISCO
+class WorldStorageProvider(private val folder: File) : StorageProvider {
+    private lateinit var world: GameWorld
 
     private var dataDir: File = File(folder, "data")
+    lateinit var gameMetadataService: GameMetadataService
 
     init {
         this.dataDir.mkdirs()
     }
 
-    override fun setWorld(world: World) {
+    override fun setWorld(world: GameWorld) {
         this.world = world
-        dataDir.mkdirs()
         // Will use var folder to create I/O Services
+        gameMetadataService = GameMetadataService(world, folder)
+        dataDir.mkdirs()
     }
 
 

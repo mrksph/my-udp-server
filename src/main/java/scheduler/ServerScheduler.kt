@@ -9,7 +9,8 @@ import java.util.concurrent.*
 class ServerScheduler(var server: MainServer,
                       var worlds: WorldScheduler,
                       var sessionRegistry: SessionRegistry,
-                      var primaryThread: Thread = Thread.currentThread()) : Scheduler {
+                      var primaryThread: Thread = Thread.currentThread())
+    : Scheduler {
 
     constructor(server: MainServer, worlds: WorldScheduler) : this(server, worlds, server.sessionRegistry)
 
@@ -87,6 +88,10 @@ class ServerScheduler(var server: MainServer,
     }
 
     fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
+
+    fun runTaskAsync(runnable: Runnable) {
+
+    }
 
     override fun isQueued(taskId: Int): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

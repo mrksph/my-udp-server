@@ -1,6 +1,6 @@
 package net.session
 
-import entity.BasicPlayer
+import entity.player.Player
 import io.netty.channel.Channel
 import net.MainServer
 import net.game.GameServer
@@ -12,7 +12,7 @@ class GameSession(server: MainServer,
                   channel: Channel,
                   gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
 
-    private lateinit var player: BasicPlayer
+    private lateinit var player: Player
 
     override fun messageReceived(message: GameMessage) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

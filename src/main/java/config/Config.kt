@@ -54,9 +54,21 @@ class Config(var configDirName: String, var configFilename: String, var paramete
         return ""
     }
 
-    enum class Key(private val path: String, private val def: Any) {
-        SERVER_IP("server.ip", ""),
-        SERVER_PORT("server.ip", ""),
+    fun getInt(serverPort: Key): Int {
+        return if (parameters.containsKey(serverPort)) {
+            parameters[serverPort] as Int
+        } else {
+            //TODO: I NEED TO USE A LIBRARY TO READ FROM CONFIG FILE
+            //TO LOAD DEFAULT VALUE
+            // val integer : Int  = getInt(serverPort.path, serverPort.default)
+            0
+        }
+
+    }
+
+    enum class Key(val path: String, val default: Any) {
+        SERVER_IP("server.ip", "0.0.0.0"),
+        SERVER_PORT("server.port", "31049"),
         WORLD_FOLDER("folders.world", "world")
     }
 }

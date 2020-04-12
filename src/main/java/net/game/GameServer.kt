@@ -6,7 +6,7 @@ import net.pipeline.GameChannelInitializer
 import net.session.GameSession
 import net.session.BaseSession
 import net.protocol.play.PlayProtocol
-import protocol.ProtocolProvider
+import net.protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess

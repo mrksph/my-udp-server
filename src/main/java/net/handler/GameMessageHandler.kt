@@ -1,5 +1,6 @@
-package net.message
+package net.handler
 
+import net.message.GameMessage
 import net.session.BaseSession
 
 interface GameMessageHandler<S : BaseSession, T : GameMessage> {

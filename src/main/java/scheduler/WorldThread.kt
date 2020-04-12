@@ -1,10 +1,10 @@
 package scheduler
 
-import world.World
+import world.GameWorld
 import java.util.concurrent.Phaser
 
-private class WorldThread(
-        private val world: World,
+class WorldThread(
+        private val world: GameWorld,
         private val tickBegin: Phaser,
         private val tickEnd: Phaser)
     : Thread("world-" + world.name) {

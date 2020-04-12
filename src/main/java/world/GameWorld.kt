@@ -1,0 +1,52 @@
+package world
+
+import entity.EntityManager
+import io.WorldStorageProvider
+import net.MainServer
+import java.util.*
+
+class GameWorld(val server: MainServer,
+                val worldCreator: WorldCreator,
+                val storage: WorldStorageProvider) {
+
+    val entityManager : EntityManager = EntityManager()
+
+    lateinit var name: String
+    lateinit var uuid: UUID
+    var initialized: Boolean = false
+
+    init {
+        storage.setWorld(this)
+        server.addWorld(this)
+        initialized = true
+    }
+
+    fun pulse() {
+        val players = emptyList<GamePlayer>()
+    }
+
+    fun save(isAsync: Boolean) {
+        writeWorldData(isAsync)
+    }
+
+    private fun writeWorldData(isAsync: Boolean) {
+        maybeAsync(isAsync, Runnable {
+            try {
+                storage.gameMetadataService.writeWorldData()
+                //Here add more things to save when saving the world data
+            } catch (e: Exception) {
+                System.err.println("Could not save world")
+                e.printStackTrace()
+            }
+        })
+    }
+
+    private fun maybeAsync(isAsync: Boolean, runnable: Runnable) {
+        if (isAsync) {
+            server.scheduler.runTaskAsync(runnable)
+        } else {
+            runnable.run()
+        }
+    }
+
+}

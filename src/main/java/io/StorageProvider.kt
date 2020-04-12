@@ -1,7 +1,7 @@
 package io
 
-import world.World
+import world.GameWorld
 
 interface StorageProvider {
-    fun setWorld(world: World)
+    fun setWorld(world: GameWorld)
 }

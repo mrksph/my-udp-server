@@ -1,6 +1,7 @@
 package scheduler
 
-import world.World
+import world.GameWorld
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -8,21 +9,53 @@ import java.util.concurrent.Phaser
 
 class WorldScheduler {
 
-    val advancedCondition: Object = Object()
-    val worldExecutor: ExecutorService = Executors.newCachedThreadPool()
-    val worlds: List<WorldEntry> = CopyOnWriteArrayList()
-    val tickBegin: Phaser = Phaser(1)
-    val tickEnd: Phaser = Phaser(1)
+    private val advancedCondition: Object = Object()
+    private val worldExecutor: ExecutorService = Executors.newCachedThreadPool()
+    private var worlds: MutableList<WorldEntry> = CopyOnWriteArrayList()
+    private val tickBegin: Phaser = Phaser(1)
+    private val tickEnd: Phaser = Phaser(1)
 
     @Volatile
     private var currentTick: Int = -1
 
-    fun addWorld(world: World) {
 
+    fun getWorld(name: String) : GameWorld? {
+        val find = worlds.find { it.world.name == name }
+        return find?.world
     }
 
-    fun removeWorld(world: World) {
+    fun getWorld(uuid: UUID) : GameWorld? {
+        val find = worlds.find { it.world.uuid == uuid }
+        return find?.world
+    }
 
+    fun addWorld(world: GameWorld): GameWorld? {
+        val worldEntry = WorldEntry(world)
+        worlds.add(worldEntry)
+
+        return try {
+            worldEntry.task = WorldThread(world, tickBegin, tickEnd)
+            tickBegin.register()
+            tickEnd.register()
+            worldExecutor.submit(worldEntry.task)
+            world
+        } catch (t: Throwable) {
+            tickBegin.arriveAndDeregister()
+            tickEnd.arriveAndDeregister()
+            worlds.remove(worldEntry)
+            null
+        }
+    }
+
+    fun removeWorld(world: GameWorld): Boolean {
+        worlds.forEach{
+            if(it.world == world) {
+                it.task.interrupt()
+            }
+            worlds.remove(it)
+            return true
+        }
+        return false
     }
 
     fun beginTick(): Int {

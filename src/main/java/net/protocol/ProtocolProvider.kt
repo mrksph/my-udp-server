@@ -1,4 +1,4 @@
-package protocol
+package net.protocol
 
 import net.protocol.handshake.HandshakeProtocol
 import net.protocol.play.PlayProtocol

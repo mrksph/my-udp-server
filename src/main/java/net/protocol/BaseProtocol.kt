@@ -2,7 +2,7 @@ package net.protocol
 
 import net.codec.GameCodec
 import net.message.GameMessage
-import net.message.GameMessageHandler
+import net.handler.GameMessageHandler
 import net.service.CodecLookupService
 import net.service.HandlerLookupService
 

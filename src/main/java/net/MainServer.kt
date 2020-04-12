@@ -2,18 +2,17 @@ package net
 
 import DEFAULT_PORT
 import config.Config
+import entity.EntityIdManager
+import entity.EntityManager
 import io.StorageProviderFactory
-import io.WorldStorageProvider
-import io.netty.channel.EventLoopGroup
-import io.netty.channel.socket.DatagramChannel
 import net.game.GameServer
+import net.protocol.ProtocolProvider
 import net.session.SessionRegistry
-import protocol.ProtocolProvider
 import scheduler.ServerScheduler
 import scheduler.WorldScheduler
 import util.Networking
 import util.ThreadKiller
-import world.World
+import world.GameWorld
 import world.WorldCreator
 import java.io.File
 import java.util.*
@@ -32,20 +31,22 @@ class MainServer(args: Array<String>) : Server {
                     EnumMap(Config.Key::class.java)
             )
 
-    private lateinit var channel: Class<out DatagramChannel?>
-    private lateinit var eventLoopGroup: EventLoopGroup
-    private lateinit var storageProvider: WorldStorageProvider
-    private val worldContainer: File = File(config.getString(Config.Key.WORLD_FOLDER))
     private lateinit var worldFolder: String
-    private lateinit var gameServer: GameServer
+    private lateinit var server: GameServer
+    private var isShuttingDown: Boolean = false
 
+    private val worldContainer: File = File(config.getString(Config.Key.WORLD_FOLDER))
     val sessionRegistry: SessionRegistry = SessionRegistry()
     private val worlds: WorldScheduler = WorldScheduler()
-    private val scheduler: ServerScheduler = ServerScheduler(this, worlds)
-    private var isShuttingDown: Boolean = false
+    val scheduler: ServerScheduler = ServerScheduler(this, worlds)
+
+    val entityIdManager : EntityIdManager = EntityIdManager()
+    val entityManager : EntityManager = EntityManager()
 
     var port = 0
     var ip: String? = null
+    val version: String = ""
+
 
     init {
         loadConfig()
@@ -66,10 +67,12 @@ class MainServer(args: Array<String>) : Server {
         // 1. Load players info saved
 
         // Get port and ip from config
+        this.ip = config.getString(Config.Key.SERVER_IP)
+        this.port = config.getInt(Config.Key.SERVER_PORT)
 
-        //2. Create world
+        //2. Create world (also create a seed and define a type)
         val worldCreator = WorldCreator.Builder()
-                .name("Hola")
+                .name("world-1")
                 .build()
 
         createWorld(worldCreator)
@@ -84,9 +87,9 @@ class MainServer(args: Array<String>) : Server {
         val address = Networking.getBindAddress(DEFAULT_PORT)
 
         //Create a GameServer (main server)
-        gameServer = GameServer(this, protocolProvider, latch)
+        server = GameServer(this, protocolProvider, latch)
         println("Binding Main Server... addres: $address")
-        gameServer.bind(address)
+        server.bind(address)
 
         //Create NetworkServer (its a type of GameServer)
         //Create a RemoteConsoleServer (remote console protocol)
@@ -97,16 +100,12 @@ class MainServer(args: Array<String>) : Server {
         }
     }
 
-    override fun getName() {
-    }
 
-    override fun getVersion() {
-    }
 
-    override fun addWorld(world: World) {}
+    override fun addWorld(world: GameWorld) {}
 
-    override fun createWorld(worldCreator: WorldCreator): World =
-            World(
+    override fun createWorld(worldCreator: WorldCreator): GameWorld =
+            GameWorld(
                     this,
                     worldCreator,
                     StorageProviderFactory.createWorldStorageProvider(worldContainer, worldCreator.name)
@@ -130,7 +129,7 @@ class MainServer(args: Array<String>) : Server {
 
         //todo: iterate players list and kick them
         //stops network servers
-        gameServer.shutdown()
+        server.shutdown()
         //save world
 
         scheduler.stop()

@@ -16,7 +16,7 @@ import net.MainServer
 import net.session.GameSession
 import net.session.BaseSession
 import net.session.SessionRegistry
-import protocol.ProtocolProvider
+import net.protocol.ProtocolProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 

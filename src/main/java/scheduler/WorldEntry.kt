@@ -1,3 +1,7 @@
 package scheduler
 
-class WorldEntry
+import world.GameWorld
+
+class WorldEntry(var world: GameWorld) {
+    lateinit var task : WorldThread
+}

@@ -1,7 +1,7 @@
 package net.service
 
 import net.message.GameMessage
-import net.message.GameMessageHandler
+import net.handler.GameMessageHandler
 import java.util.*
 
 class HandlerLookupService {
