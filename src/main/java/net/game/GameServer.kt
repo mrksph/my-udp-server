@@ -40,4 +40,9 @@ class GameServer(server: MainServer,
     override fun removeSession(baseSession: BaseSession) {
         sessions.remove(baseSession)
     }
+
+    fun sessionInactivated(gameSession: GameSession) {
+        server.sessionRegistry.remove(gameSession)
+    }
+
 }

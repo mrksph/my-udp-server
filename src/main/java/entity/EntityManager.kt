@@ -1,5 +1,7 @@
 package entity
 
+import entity.player.GamePlayer
+
 class EntityManager {
 
     private val entities: MutableMap<Int, BaseEntity> = mutableMapOf()
@@ -19,10 +21,19 @@ class EntityManager {
     }
 
     fun register(entity: BaseEntity) {
-        entities.put(entity.id, entity)
+        entities[entity.id] = entity
     }
 
     fun unregister(entity: BaseEntity) {
 
+    }
+
+    fun getAllPayers(): List<GamePlayer> {
+        return entities.values
+                .filter {
+                    it is GamePlayer
+                }.map {
+                    it as GamePlayer
+                }.toList()
     }
 }

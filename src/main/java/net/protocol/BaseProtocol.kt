@@ -1,10 +1,11 @@
 package net.protocol
 
 import net.codec.GameCodec
-import net.message.GameMessage
 import net.handler.GameMessageHandler
+import net.message.GameMessage
 import net.service.CodecLookupService
 import net.service.HandlerLookupService
+import net.session.BaseSession
 
 
 abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol {
@@ -22,6 +23,12 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
             System.err.println("Error while instantianting and binding")
         }
     }
+
+    fun <M : GameMessage> getMessageHandler(javaClass: Class<GameMessage>)
+            : GameMessageHandler<in BaseSession, GameMessage>? {
+        return handlers.find(javaClass)
+    }
+
 
     protected open fun <M : GameMessage, C : GameCodec<in M>, H : GameMessageHandler<*, in M>>
             inbound(opcode: Int, message: Class<M>, codec: Class<C>, handler: H?) {

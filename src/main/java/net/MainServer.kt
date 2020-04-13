@@ -4,6 +4,7 @@ import DEFAULT_PORT
 import config.Config
 import entity.EntityIdManager
 import entity.EntityManager
+import entity.player.GamePlayer
 import generator.WorldGenerator
 import io.StorageProviderFactory
 import net.game.GameServer
@@ -21,6 +22,9 @@ import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
 
 class MainServer(args: Array<String>) : Server {
+    companion object {
+        const val PROTOCOL_VERSION = 4
+    }
 
     /**
      * Load Configuration when MainServer is instantiated
@@ -38,14 +42,17 @@ class MainServer(args: Array<String>) : Server {
 
     private val worldContainer: File = File(config.getString(Config.Key.WORLD_FOLDER))
     val sessionRegistry: SessionRegistry = SessionRegistry()
-    private val worlds: WorldScheduler = WorldScheduler()
-    val scheduler: ServerScheduler = ServerScheduler(this, worlds)
+    private val worldScheduler: WorldScheduler = WorldScheduler()
+    val worldEntries = worldScheduler.worlds
+    val scheduler: ServerScheduler = ServerScheduler(this, worldScheduler)
 
-    val entityIdManager : EntityIdManager = EntityIdManager()
-    val entityManager : EntityManager = EntityManager()
+    val entityIdManager: EntityIdManager = EntityIdManager()
+    val entityManager: EntityManager = EntityManager()
+    val rawPlayers = mutableListOf<GamePlayer>()
 
     var port = 0
     var ip: String? = null
+    var PROTOCOL_VERSION: Int = 1
     val version: String = ""
 
 
@@ -104,9 +111,9 @@ class MainServer(args: Array<String>) : Server {
         }
     }
 
-
-
-    override fun addWorld(world: GameWorld) {}
+    override fun addWorld(world: GameWorld) {
+        worldScheduler.addWorld(world)
+    }
 
     override fun createWorld(worldCreator: WorldCreator): GameWorld =
             GameWorld(

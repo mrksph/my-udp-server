@@ -9,7 +9,7 @@ abstract class BaseEntity(val location: Location) : Entity {
     var id: Int = 0
 
     private var server: MainServer
-    private var world: GameWorld
+    internal var world: GameWorld
     lateinit var origin: Location
     lateinit var prevLocation: Location
 
@@ -20,6 +20,10 @@ abstract class BaseEntity(val location: Location) : Entity {
 
         server.entityIdManager.allocate(this)
         world.entityManager.register(this)
+    }
+
+    open fun pulse() {
+
     }
 
 }

@@ -11,7 +11,7 @@ class WorldScheduler {
 
     private val advancedCondition: Object = Object()
     private val worldExecutor: ExecutorService = Executors.newCachedThreadPool()
-    private var worlds: MutableList<WorldEntry> = CopyOnWriteArrayList()
+    var worlds: MutableList<WorldEntry> = CopyOnWriteArrayList()
     private val tickBegin: Phaser = Phaser(1)
     private val tickEnd: Phaser = Phaser(1)
 
@@ -82,5 +82,10 @@ class WorldScheduler {
         tickBegin.forceTermination()
         tickEnd.forceTermination()
         worldExecutor.shutdownNow()
+    }
+
+
+    class WorldEntry(var world: GameWorld) {
+        lateinit var task : WorldThread
     }
 }

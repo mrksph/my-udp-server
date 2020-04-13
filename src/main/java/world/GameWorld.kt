@@ -1,6 +1,7 @@
 package world
 
 import entity.EntityManager
+import entity.location.Location
 import generator.WorldGenerator
 import io.WorldStorageProvider
 import net.MainServer
@@ -11,7 +12,7 @@ class GameWorld(val server: MainServer,
                 val storage: WorldStorageProvider) {
 
     private var generator: WorldGenerator
-    val entityManager : EntityManager = EntityManager()
+    val entityManager: EntityManager = EntityManager()
 
     lateinit var name: String
     lateinit var uuid: UUID
@@ -25,7 +26,13 @@ class GameWorld(val server: MainServer,
     }
 
     fun pulse() {
-        val players = emptyList<GamePlayer>()
+        val allPlayers = entityManager.getAllPayers()
+
+        allPlayers.forEach {
+            it.pulse()
+        }
+
+
     }
 
     fun save(isAsync: Boolean) {
@@ -51,5 +58,6 @@ class GameWorld(val server: MainServer,
             runnable.run()
         }
     }
+
 
 }
