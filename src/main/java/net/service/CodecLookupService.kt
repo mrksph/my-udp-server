@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class CodecLookupService(size: Int) {
 
-    private var messages: ConcurrentMap<Class<out GameMessage>, GameCodec.CodecRegistration>
+    private var messages: ConcurrentMap<Class<in GameMessage>, GameCodec.CodecRegistration>
     private var opcodes: ConcurrentMap<Int, GameCodec<GameMessage>>
     private var nextId: AtomicInteger
 
@@ -28,15 +28,15 @@ class CodecLookupService(size: Int) {
     @Throws(InstantiationException::class,
             IllegalAccessException::class,
             InvocationTargetException::class)
-    fun <M : GameMessage, C : GameCodec<in M>>  //TODO: CHANGE OPCODE: INT TO INT? POR SI LLEGAN ERRORES EN PAQUETES (?))
-            bind(messageClass: Class<M>, codecClass: Class<C>, opcode: Int): GameCodec.CodecRegistration? {
+    fun    //TODO: CHANGE OPCODE: INT TO INT? POR SI LLEGAN ERRORES EN PAQUETES (?))
+            bind(messageClass: Class<in GameMessage>, codecClass: Class<in GameCodec<in GameMessage>>, opcode: Int): GameCodec.CodecRegistration? {
         var reg = messages[messageClass]
         if (reg != null) {
             return reg
         } else {
             val codec: GameCodec<GameMessage>
             try {
-                val con: Constructor<C> = codecClass.getConstructor()
+                val con: Constructor<in GameCodec<in GameMessage>> = codecClass.getConstructor()
                 con.isAccessible = true
                 codec = con.newInstance() as GameCodec<GameMessage>
             } catch (var8: IllegalAccessException) {
@@ -86,7 +86,7 @@ class CodecLookupService(size: Int) {
         return get(opcode)
     }
 
-    fun <M : GameMessage?> find(clazz: Class<M>): GameCodec.CodecRegistration? {
+    fun find(clazz: Class<in GameMessage>): GameCodec.CodecRegistration? {
         return messages[clazz]
     }
 

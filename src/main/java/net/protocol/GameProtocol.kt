@@ -5,6 +5,6 @@ import net.handler.GameMessageHandler
 import net.message.GameMessage
 
 interface GameProtocol {
-    fun <M : GameMessage> getCodecRegistration(clazz: Class<M>): GameCodec.CodecRegistration
+    fun  getCodecRegistration(clazz: Class<in GameMessage>): GameCodec.CodecRegistration
 
 }
