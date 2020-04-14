@@ -7,20 +7,47 @@ import net.message.GameMessage
 import net.session.BaseSession
 import java.util.*
 
+//class HandlerLookupService {
+//    //    private val handlers: MutableMap<Class<in GameMessage>, GameMessageHandler<in BaseSession, in GameMessage>> = HashMap()
+//    private val handlers: HashMap<Any?, Any?> = HashMap()
+//
+//
+//    fun <M : GameMessage, H : GameMessageHandler<in BaseSession, in GameMessage>>
+//            bind(clazz: Class<M>, handlerClass: Class<H>) {
+//        bind<M, H>(clazz, (handlerClass.newInstance() as GameMessageHandler<*,*>))
+//    }
+////
+////    fun <M: GameMessage, H : GameMessageHandler<in BaseSession, in GameMessage>> bind(clazz: Class<in GameMessage>, handler: H) {
+////        this.handlers[clazz] = handler
+////    }
+//
+//
+//    @Throws(InstantiationException::class, IllegalAccessException::class)
+//    fun <M : GameMessage?, H : GameMessageHandler<*, in M>?> bind(clazz: Class<M>?, handler: H) {
+//        handlers[clazz] = handler
+//    }
+//
+//    fun find(messageClass: Class<in GameMessage>): GameMessageHandler<in BaseSession, in GameMessage> {
+//        return handlers[messageClass] as GameMessageHandler<in BaseSession, in GameMessage>
+//    }
+//
+//}
+
+
 class HandlerLookupService {
-    private val handlers: MutableMap<Class<in GameMessage>, GameMessageHandler<in BaseSession, in GameMessage>> = HashMap()
+    private val handlers: MutableMap<Class<out GameMessage>, GameMessageHandler<out BaseSession, out GameMessage>> = HashMap()
 
     @Throws(InstantiationException::class, IllegalAccessException::class)
-    fun bind(messageClass: Class<in GameMessage>, handlerClass: Class<in GameMessageHandler<in BaseSession, in GameMessage>>) {
-        this.bind(messageClass, handlerClass.newInstance() as Class<GameMessageHandler<in BaseSession, in GameMessage>>)
+    fun bind(clazz: Class<out GameMessage>, handlerClass: Class<out GameMessageHandler<out BaseSession, out GameMessage>>) {
+        this.bind(clazz, handlerClass.newInstance() as Class<GameMessageHandler<out BaseSession, out GameMessage>>)
     }
 
     @Throws(InstantiationException::class, IllegalAccessException::class)
-    fun  bind(messageClass: Class<in GameMessage>, handler: GameMessageHandler<in BaseSession, in GameMessage>) {
-        handlers[messageClass] = handler
+    fun  bind(clazz: Class<out GameMessage>, handler: GameMessageHandler<out BaseSession, out GameMessage>) {
+        handlers[clazz] = handler
     }
 
-    fun find(clazz: Class<in GameMessage>): GameMessageHandler<in BaseSession, in GameMessage>? {
+    fun find(clazz: Class<out GameMessage>): GameMessageHandler<out BaseSession, out GameMessage>? {
         return handlers[clazz]
     }
 

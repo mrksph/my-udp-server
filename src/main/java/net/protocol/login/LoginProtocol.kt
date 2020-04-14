@@ -10,9 +10,12 @@ class LoginProtocol(httpClient: HttpClient)
     : BaseProtocol("LOGIN", 5) {
 
     init {
+        val java = LoginStartMessage::class.java
+        val java1 = LoginStartCodec::class.java
+        val java2 = LoginStartHandler::class.java
         inbound(0x00,
-                LoginStartMessage::class.java,
-                LoginStartCodec::class.java,
-                LoginStartHandler::class.java)
+                java,
+                java1,
+                java2)
     }
 }

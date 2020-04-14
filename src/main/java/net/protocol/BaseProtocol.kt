@@ -18,9 +18,9 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
     var handlers: HandlerLookupService = HandlerLookupService()
 
     protected open fun inbound(opcode: Int,
-                               message: Class<in GameMessage>,
-                               codec: Class<in GameCodec<in GameMessage>>,
-                               handler: Class<in GameMessageHandler<in BaseSession, in GameMessage>>) {
+                               message: Class<out GameMessage>,
+                               codec: Class<out GameCodec<out GameMessage>>,
+                               handler: Class<out GameMessageHandler<out BaseSession, out GameMessage>>) {
         try {
             inboundCodecs.bind(message, codec, opcode)
             handlers.bind(message, handler)
@@ -31,9 +31,9 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
     }
 
     protected open fun inbound(opcode: Int,
-                               message: Class<in GameMessage>,
-                               codec: Class<GameCodec<in GameMessage>>,
-                               handler: GameMessageHandler<in BaseSession, in GameMessage>) {
+                               message: Class<out GameMessage>,
+                               codec: Class<GameCodec<out GameMessage>>,
+                               handler: GameMessageHandler<out BaseSession, out GameMessage>) {
         try {
             inboundCodecs.bind(message, codec, opcode)
             handlers.bind(message, handler)
@@ -43,8 +43,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
     }
 
     open fun outbound(opcode: Int,
-                      message: Class<in GameMessage>,
-                      codec: Class<in GameCodec<in GameMessage>>) {
+                      message: Class<out GameMessage>,
+                      codec: Class<out GameCodec<out GameMessage>>) {
         try {
             outboundCodecs.bind(message, codec, opcode)
         } catch (ex: InstantiationException) {
@@ -52,7 +52,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
         }
     }
 
-    override fun getCodecRegistration(clazz: Class<in GameMessage>): GameCodec.CodecRegistration {
+    override fun getCodecRegistration(clazz: Class<out GameMessage>): GameCodec.CodecRegistration {
         val find = outboundCodecs.find(clazz)
 
         if (find == null) {
@@ -62,8 +62,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
         return find!!
     }
 
-    fun getMessageHandler(messageClass: Class<in GameMessage>)
-            : GameMessageHandler<in BaseSession, in GameMessage>? = handlers.find(messageClass)
+    fun getMessageHandler(messageClass: Class<out GameMessage>)
+            : GameMessageHandler<out BaseSession, out GameMessage>? = handlers.find(messageClass)
 
     //TODO: START USING THIS ONE INSTEAD OF JAVA CLASS
     open fun inbound(i: Int, kClass: KClass<LoginStartMessage>, kClass1: KClass<LoginStartHandler>) {}

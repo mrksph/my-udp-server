@@ -14,6 +14,8 @@ abstract class BaseSession(val server: MainServer,
                            val gameServer: GameServer) {
 
 
+    lateinit var sessionId: String
+
     open fun messageReceived(message: GameMessage) {
         handleMessage(message)
     }
