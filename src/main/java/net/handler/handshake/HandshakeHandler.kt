@@ -8,8 +8,9 @@ import net.protocol.login.LoginProtocol
 import net.session.GameSession
 import java.net.InetSocketAddress
 
-class HandshakeHandler(var loginProtocol: LoginProtocol) : GameMessageHandler<GameSession, HandshakeMessage>() {
-    override fun handle(session: GameSession, message: HandshakeMessage) {
+class HandshakeHandler(var loginProtocol: LoginProtocol)
+    : GameMessageHandler<GameSession, HandshakeMessage> {
+    override fun internalHandle(session: GameSession, message: HandshakeMessage) {
         val state = message.state
         val protocol: BaseProtocol
 

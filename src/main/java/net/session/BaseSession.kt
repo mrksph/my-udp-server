@@ -1,7 +1,6 @@
 package net.session
 
 import io.netty.channel.Channel
-import io.netty.handler.codec.CodecException
 import net.MainServer
 import net.game.GameServer
 import net.handler.GameMessageHandler
@@ -34,7 +33,7 @@ abstract class BaseSession(val server: MainServer,
 
     }
 
-    private fun onHandlerThrowable(message: GameMessage, messageHandler: GameMessageHandler<out BaseSession, GameMessage>, t: Throwable) {
+    private fun onHandlerThrowable(message: GameMessage, messageHandler: GameMessageHandler<out BaseSession, out GameMessage>?, t: Throwable) {
     }
 
     abstract fun getProcessor()

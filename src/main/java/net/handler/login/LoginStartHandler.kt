@@ -7,7 +7,12 @@ import net.session.GameSession
 
 class LoginStartHandler(val httpClient: HttpClient)
     : GameMessageHandler<GameSession, LoginStartMessage> {
-    override fun handle(session: GameSession, message: LoginStartMessage) {
+    override fun internalHandle(session: GameSession, message: LoginStartMessage) {
         val sessionId = session.sessionId
+
+
+        httpClient.connect()
+
+
     }
 }

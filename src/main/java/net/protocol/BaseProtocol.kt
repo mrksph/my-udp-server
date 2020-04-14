@@ -32,7 +32,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
 
     protected open fun inbound(opcode: Int,
                                message: Class<out GameMessage>,
-                               codec: Class<GameCodec<out GameMessage>>,
+                               codec: Class<out GameCodec<out GameMessage>>,
                                handler: GameMessageHandler<out BaseSession, out GameMessage>) {
         try {
             inboundCodecs.bind(message, codec, opcode)
