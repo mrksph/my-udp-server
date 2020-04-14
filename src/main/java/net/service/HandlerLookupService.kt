@@ -1,25 +1,25 @@
 package net.service
 
-import net.message.GameMessage
 import net.handler.GameMessageHandler
+import net.message.GameMessage
 import net.session.BaseSession
 import java.util.*
 
 class HandlerLookupService {
-    private val handlers: Map<Class<out GameMessage?>, GameMessageHandler<in BaseSession, *>> = HashMap()
+    private val handlers: MutableMap<Class<in GameMessage>, GameMessageHandler<in BaseSession, in GameMessage>> = HashMap()
 
-    fun <M : GameMessage?, H : GameMessageHandler<*, in M>?>
-            bind(clazz: Class<M>?, handler: H) {
-        //
+    fun <H : GameMessageHandler<in BaseSession, in GameMessage>>
+            bind(clazz: Class<GameMessage>, handler: H) {
+        this.handlers[clazz] = handler
     }
 
-    fun <M : GameMessage?, H : GameMessageHandler<*, in M>?>
-            bind(clazz: Class<M>?, handlerClass: Class<H>) {
+    fun <H : GameMessageHandler<in BaseSession, in GameMessage>>
+            bind(clazz: Class<GameMessage>, handlerClass: Class<H>) {
         bind(clazz, handlerClass.newInstance())
     }
 
-    fun <M : GameMessage> find (messageClass: Class<M>): GameMessageHandler<in BaseSession, M>? {
-        return handlers[messageClass] as GameMessageHandler<in BaseSession, M>?
+    fun find(messageClass: Class<in GameMessage>): GameMessageHandler<in BaseSession, in GameMessage> {
+        return handlers[messageClass] as GameMessageHandler<in BaseSession, in GameMessage>
     }
 
 }

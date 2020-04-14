@@ -1,4 +1,4 @@
 package entity.meta
 
-class PlayerProfile {
+class PlayerProfile(val name: String) {
 }

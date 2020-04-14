@@ -2,10 +2,13 @@ package net.protocol
 
 import net.codec.GameCodec
 import net.handler.GameMessageHandler
+import net.handler.login.LoginStartHandler
 import net.message.GameMessage
+import net.message.login.LoginStartMessage
 import net.service.CodecLookupService
 import net.service.HandlerLookupService
 import net.session.BaseSession
+import kotlin.reflect.KClass
 
 
 abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol {
@@ -58,4 +61,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
 
         return find!!
     }
+
+    //TODO: START USING THIS ONE INSTEAD OF JAVA CLASS
+    open fun inbound(i: Int, kClass: KClass<LoginStartMessage>, kClass1: KClass<LoginStartHandler>){}
 }
