@@ -25,6 +25,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
             inboundCodecs.bind(message, codec, opcode)
             handlers.bind(message, handler)
         } catch (ex: InstantiationException) {
+            ex.printStackTrace()
             System.err.println("Error while instantianting and binding")
         }
 

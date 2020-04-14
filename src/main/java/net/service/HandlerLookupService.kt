@@ -29,7 +29,8 @@ import java.util.*
 //
 //    fun find(messageClass: Class<in GameMessage>): GameMessageHandler<in BaseSession, in GameMessage> {
 //        return handlers[messageClass] as GameMessageHandler<in BaseSession, in GameMessage>
-//    }
+//    }(GameMessageHandler)handlerClass.newInstance()
+//this.bind(clazz, (MessageHandler)handlerClass.newInstance());
 //
 //}
 
@@ -39,11 +40,12 @@ class HandlerLookupService {
 
     @Throws(InstantiationException::class, IllegalAccessException::class)
     fun bind(clazz: Class<out GameMessage>, handlerClass: Class<out GameMessageHandler<out BaseSession, out GameMessage>>) {
-        this.bind(clazz, handlerClass.newInstance() as Class<GameMessageHandler<out BaseSession, out GameMessage>>)
+        val handlerInstance = handlerClass.newInstance()
+        this.bind(clazz, handlerInstance)
     }
 
     @Throws(InstantiationException::class, IllegalAccessException::class)
-    fun  bind(clazz: Class<out GameMessage>, handler: GameMessageHandler<out BaseSession, out GameMessage>) {
+    fun bind(clazz: Class<out GameMessage>, handler: GameMessageHandler<out BaseSession, out GameMessage>) {
         handlers[clazz] = handler
     }
 

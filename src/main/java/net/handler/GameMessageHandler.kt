@@ -4,7 +4,7 @@ package net.handler
 import net.message.GameMessage
 import net.session.BaseSession
 
-interface GameMessageHandler<S : BaseSession, T : GameMessage> {
+abstract class GameMessageHandler<S : BaseSession, T : GameMessage> {
 
      @Suppress("UNCHECKED_CAST")
      fun handle(session: BaseSession, message: GameMessage){
@@ -14,6 +14,6 @@ interface GameMessageHandler<S : BaseSession, T : GameMessage> {
      }
 
 
-     fun internalHandle(session: S, message: T)
+     abstract fun internalHandle(session: S, message: T)
 
 }

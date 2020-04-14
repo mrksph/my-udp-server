@@ -28,8 +28,8 @@ class CodecLookupService(size: Int) {
     @Throws(InstantiationException::class,
             IllegalAccessException::class,
             InvocationTargetException::class)
-    fun    //TODO: CHANGE OPCODE: INT TO INT? POR SI LLEGAN ERRORES EN PAQUETES (?))
-            bind(messageClass: Class<out GameMessage>, codecClass: Class<out GameCodec<out GameMessage>>, opcode: Int): GameCodec.CodecRegistration? {
+    //TODO: CHANGE OPCODE: INT TO INT? POR SI LLEGAN ERRORES EN PAQUETES (?))
+    fun bind(messageClass: Class<out GameMessage>, codecClass: Class<out GameCodec<out GameMessage>>, opcode: Int): GameCodec.CodecRegistration? {
         var reg = messages[messageClass]
         if (reg != null) {
             return reg
@@ -82,7 +82,7 @@ class CodecLookupService(size: Int) {
         this.opcodes[opcode] = codec
     }
 
-    fun find(opcode: Int) : GameCodec<GameMessage>? {
+    fun find(opcode: Int): GameCodec<GameMessage>? {
         return get(opcode)
     }
 

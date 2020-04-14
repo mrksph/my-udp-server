@@ -9,13 +9,17 @@ import net.protocol.play.PlayProtocol
 class ProtocolProvider {
     val HANDSHAKE: HandshakeProtocol
     //  val status: StatusProtocol
-      val login: LoginProtocol
+    val login: LoginProtocol
     val PLAY: PlayProtocol
 
     init {
         //  status = StatusProtocol()
-        val httpClient = HttpClient()
-          login = LoginProtocol(httpClient)
+        val httpClient: HttpClient = object : HttpClient {
+            override fun connect() {
+
+            }
+        }
+        login = LoginProtocol(httpClient)
         //  handshake = HandshakeProtocol(status, login)
         HANDSHAKE = HandshakeProtocol(login)
         PLAY = PlayProtocol()
