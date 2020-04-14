@@ -62,8 +62,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
         return find!!
     }
 
-    fun getMessageHandler(javaClass: Class<in GameMessage>)
-            : GameMessageHandler<in BaseSession, in GameMessage>? = handlers.find(javaClass)
+    fun getMessageHandler(messageClass: Class<in GameMessage>)
+            : GameMessageHandler<in BaseSession, in GameMessage>? = handlers.find(messageClass)
 
     //TODO: START USING THIS ONE INSTEAD OF JAVA CLASS
     open fun inbound(i: Int, kClass: KClass<LoginStartMessage>, kClass1: KClass<LoginStartHandler>) {}
