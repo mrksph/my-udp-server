@@ -33,7 +33,8 @@ class GameClient {
 
             val packet = DatagramPacket(
                     buffer,
-                    SocketUtils.socketAddress("255.255.255.255", 31047))
+                    SocketUtils.socketAddress("255.255.255.255", 31047),
+                    SocketUtils.socketAddress("0.0.0.0", 31047))
 
             channel.writeAndFlush(packet).sync()
             println("Write package")

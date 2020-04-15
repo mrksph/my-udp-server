@@ -9,7 +9,7 @@ import net.message.GameMessage
 import net.session.GameSession
 import java.util.concurrent.atomic.AtomicReference
 
-class MessagesHandler(private var connectionManager: GameServer) : SimpleChannelInboundHandler<DatagramPacket>() {
+class MessagesHandler(private var connectionManager: GameServer) : SimpleChannelInboundHandler<GameMessage>() {
 
     lateinit var channel: Channel
     private val sessionReference: AtomicReference<GameSession> = AtomicReference<GameSession>(null)
@@ -21,36 +21,10 @@ class MessagesHandler(private var connectionManager: GameServer) : SimpleChannel
         session.onReady()
     }
 
-    override fun channelRead0(context: ChannelHandlerContext?, packet: DatagramPacket) {
+    override fun channelRead0(context: ChannelHandlerContext?, packet: GameMessage) {
         val session = sessionReference.get()
 
 //        val content = packet.content()
-
-
-
-//        session.messageReceived(message)
-//        val content = packet.content()
-//
-//        val message1 = content.toString(CharsetUtil.UTF_8)
-//        context.fireUserEventTriggered("W")
-//        println("message1 $message1")
-//
-//        if (content.readableBytes() < 7) {
-//            return
-//        }
-//
-//
-//        val type = content.readByte()
-//        System.err.println(packet)
-//        if ("QOTM?" == packet.content().toString(CharsetUtil.UTF_8)) {
-//            counter++
-//            println("This is the $counter request")
-//            val copiedBuffer = Unpooled.copiedBuffer("QOTM: " + "SS", CharsetUtil.UTF_8)
-//            context.write(DatagramPacket(copiedBuffer, packet.sender()))
-//
-//            if (counter == 11)
-//                context.close()
-//        }
 
     }
 

@@ -15,7 +15,8 @@ class GameChannelInitializer(private var connectionManager: GameServer) : Channe
 
         channel.pipeline()
 //                .addLast("codecs-handler", CodecsHandler(connectionManager.protocolProvider.HANDSHAKE))
-                .addLast("codecs-handler", UdpDecoder())
+                .addLast("encoder", UdpEncoder())
+                .addLast("decoder", UdpDecoder())
                 .addLast("messages-handler", MessagesHandler(connectionManager))
         //   .addLast("logic", MyLogicHandler())
         //   .pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
