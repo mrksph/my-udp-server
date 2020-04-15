@@ -9,31 +9,14 @@ import net.codec.GameCodec
 import net.message.GameMessage
 import net.protocol.GameProtocol
 
-class CodecsHandler(private var protocol: GameProtocol) : MessageToMessageCodec<ByteBuf, DatagramPacket>() {
-
-    override fun encode(context: ChannelHandlerContext, message: DatagramPacket, out: MutableList<Any>) {
-//        // find codec
-//        val reg: GameCodec.CodecRegistration = protocol.getCodecRegistration(message)
-//
-//        val headerBuf: ByteBuf = context.alloc().buffer(8)
-//        //Write to buffer opcode
-//
-//
-//        val messageBuf: ByteBuf = context.alloc().buffer()
-//
-//        out.add(Unpooled.wrappedBuffer(headerBuf, messageBuf))
+class CodecsHandler(private var protocol: GameProtocol) : MessageToMessageCodec<DatagramPacket, ByteBuf>() {
+    override fun encode(p0: ChannelHandlerContext?, p1: ByteBuf?, p2: MutableList<Any>?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun decode(context: ChannelHandlerContext, message: ByteBuf, out: MutableList<Any>) {
-        val codec = protocol.readHeader(message)
-
-        val decodedMessage = codec.decode(message)
-
-        if (message.readableBytes() > 0) {
-            System.err.println("Message too long")
-        }
-
-        out.add(decodedMessage)
+    override fun decode(p0: ChannelHandlerContext?, p1: DatagramPacket?, p2: MutableList<Any>?) {
+        println("HOLA")
     }
+
 
 }
