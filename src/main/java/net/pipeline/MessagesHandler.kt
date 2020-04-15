@@ -23,7 +23,9 @@ class MessagesHandler(private var connectionManager: GameServer) : SimpleChannel
 
     override fun channelRead0(context: ChannelHandlerContext?, packet: DatagramPacket) {
         val session = sessionReference.get()
-        val content = packet.content()
+
+//        val content = packet.content()
+
 
 
 //        session.messageReceived(message)

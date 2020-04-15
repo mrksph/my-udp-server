@@ -1,4 +1,3 @@
-import client.GameClient
 import net.MainServer
 import kotlin.system.exitProcess
 

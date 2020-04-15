@@ -42,7 +42,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
         val find = outboundCodecs.find(message)
 
         if (find == null) {
-            System.err.println("No codec to write: ${message.name} in $name")
+//            System.err.println("No codec to write: ${message} in $name")
         }
 
         return find!!

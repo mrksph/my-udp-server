@@ -17,7 +17,7 @@ class GamePlayer(val session: GameSession,
     fun join(session: GameSession) {
         //send initial location from last(¿)
         //TODO: SEND SESSION MESSAGE: session.send()
-        session.send(JoinGameMessage(id))
+       // session.send(JoinGameMessage(id))
     }
 
     override fun pulse() {

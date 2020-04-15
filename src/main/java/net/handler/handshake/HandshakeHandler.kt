@@ -26,7 +26,7 @@ class HandshakeHandler constructor(var loginProtocol: LoginProtocol)
         session.protocol = protocol
 
         if (message.version < MainServer.PROTOCOL_VERSION) {
-            session.disconnect("Outdated client")
+            session.disconnect("Outdated net.client")
         } else if (message.version > MainServer.PROTOCOL_VERSION) {
             session.disconnect("Outdated server")
         }

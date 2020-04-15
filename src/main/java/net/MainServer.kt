@@ -64,7 +64,7 @@ class MainServer(args: Array<String>) : Server {
     /**
      * The idea is to first create the world in the server then bind the server to receive connections
      * In the first step we load all the data and configuration
-     * In the second step we then start everything we need to accept client requests
+     * In the second step we then start everything we need to accept net.client requests
      * See Glowstone's GlowServer class for more info
      */
     fun run() {

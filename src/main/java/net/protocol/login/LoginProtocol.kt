@@ -19,7 +19,7 @@ class LoginProtocol(httpClient: HttpClient)
 //                java,
 //                java1,
 //                java2)
-        val message = LoginStartMessage()
+        val message = LoginStartMessage(1)
         val codec = LoginStartCodec("LoginStartCodec")
         val handler = LoginStartHandler(httpClient)
         inbound(0x00,

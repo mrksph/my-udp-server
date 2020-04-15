@@ -29,7 +29,7 @@ class GameSession(server: MainServer,
     var disconnected: Boolean = false
 
     override fun messageReceived(message: GameMessage) {
-        if (message is AsyncGameMessage && message.isAsync) {
+        if (message is AsyncGameMessage && message.isAsync()) {
             super.messageReceived(message)
         } else {
             messageQueue.add(message)
