@@ -99,7 +99,7 @@ class MainServer(args: Array<String>) : Server {
 
         //Create a GameServer (main server)
         server = GameServer(this, protocolProvider, latch)
-        println("Binding Main Server... addres: $address")
+        println("Binding Main Server... address: $address")
         server.bind(address)
 
         //Create NetworkServer (its a type of GameServer)
@@ -115,12 +115,14 @@ class MainServer(args: Array<String>) : Server {
         worldScheduler.addWorld(world)
     }
 
-    override fun createWorld(worldCreator: WorldCreator): GameWorld =
-            GameWorld(
-                    this,
-                    worldCreator,
-                    StorageProviderFactory.createWorldStorageProvider(worldContainer, worldCreator.name)
-            )
+    override fun createWorld(worldCreator: WorldCreator): GameWorld {
+        val storage = StorageProviderFactory.createStorageProvider(worldContainer, worldCreator.name)
+        return GameWorld(
+                this,
+                worldCreator,
+                storage
+        )
+    }
 
     override fun getWorldContainer(): File = File(worldFolder)
 

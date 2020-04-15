@@ -13,7 +13,7 @@ class LoginStartHandler constructor(var httpClient: HttpClient)
         val sessionId = session.sessionId
 
 
-        httpClient.connect()
+//        httpClient.connect()
 
     }
 }

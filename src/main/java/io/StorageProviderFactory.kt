@@ -5,7 +5,7 @@ import java.io.File
 
 interface StorageProviderFactory {
     companion object {
-        fun createWorldStorageProvider(folder: File, worldName: String?) =
+        fun createStorageProvider(folder: File, worldName: String?) =
                 WorldStorageProvider(File(folder, worldName!!))
     }
 }

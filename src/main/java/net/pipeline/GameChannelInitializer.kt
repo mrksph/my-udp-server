@@ -14,8 +14,8 @@ class GameChannelInitializer(private var connectionManager: GameServer) : Channe
         // need to specify a group.
 
         channel.pipeline()
-                .addLast("codec-handler", CodecsHandler(connectionManager.protocolProvider.HANDSHAKE))
-                .addLast("message-handler", MessagesHandler(connectionManager))
+                .addLast("codecs-handler", CodecsHandler(connectionManager.protocolProvider.HANDSHAKE))
+                .addLast("messages-handler", MessagesHandler(connectionManager))
         //   .addLast("logic", MyLogicHandler())
         //   .pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
     }

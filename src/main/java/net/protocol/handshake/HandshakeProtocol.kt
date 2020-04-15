@@ -10,13 +10,13 @@ class HandshakeProtocol(loginProtocol: LoginProtocol)
     : BaseProtocol("HANDSHAKE", 1) {
 
     init {
-        val java = HandshakeMessage::class.java
-        val java1 = HandshakeCodec::class.java
+        val message = HandshakeMessage()
+        val codec = HandshakeCodec()
         val handshakeHandler = HandshakeHandler(loginProtocol)
 
         inbound(0x00,
-                java,
-                java1,
+                message,
+                codec,
                 handshakeHandler)
     }
 

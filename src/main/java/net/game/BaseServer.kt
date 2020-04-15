@@ -90,12 +90,15 @@ abstract class BaseServer(var server: MainServer,
     private fun bestDatagramChannel(): Class<out DatagramChannel?>? {
         return when {
             EPOLL_AVAILABLE -> {
+                println("EPOLL DATAGRAM CHANNEL")
                 EpollDatagramChannel::class.java
             }
             KQUEUE_AVAILABLE -> {
+                println("KQUEUE DATAGRAM CHANNEL")
                 KQueueDatagramChannel::class.java
             }
             else -> {
+                println("NIO DATAGRAM CHANNEL")
                 NioDatagramChannel::class.java
             }
         }

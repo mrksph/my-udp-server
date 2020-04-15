@@ -23,6 +23,7 @@ class GameServer(server: MainServer,
     override fun onBindSuccess(address: InetSocketAddress) {
         server.port = address.port
         server.ip = address.hostString
+        println("ONBIND SUCCESS IP:${server.ip} PORT:${server.port}")
         super.onBindSuccess(address)
     }
 

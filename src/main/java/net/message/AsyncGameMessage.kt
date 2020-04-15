@@ -1,5 +1,5 @@
 package net.message
 
-interface AsyncGameMessage : GameMessage {
-    val isAsync: Boolean
+abstract class AsyncGameMessage(name: String, val isAsync: Boolean)
+    : GameMessage(name) {
 }

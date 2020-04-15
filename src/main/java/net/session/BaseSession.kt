@@ -20,8 +20,7 @@ abstract class BaseSession(val server: MainServer,
     }
 
     private fun handleMessage(message: GameMessage) {
-        val messageClass = message.javaClass
-        val messageHandler = this.protocol.getMessageHandler(messageClass)
+        val messageHandler = this.protocol.getMessageHandler(message)
 
         if (messageHandler != null) {
             try {

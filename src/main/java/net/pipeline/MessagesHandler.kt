@@ -3,24 +3,30 @@ package net.pipeline
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
+import io.netty.channel.socket.DatagramPacket
 import net.game.GameServer
 import net.message.GameMessage
 import net.session.GameSession
 import java.util.concurrent.atomic.AtomicReference
 
-class MessagesHandler(private var connectionManager: GameServer) : SimpleChannelInboundHandler<GameMessage>() {
+class MessagesHandler(private var connectionManager: GameServer) : SimpleChannelInboundHandler<DatagramPacket>() {
 
     lateinit var channel: Channel
-    private val gameSessionReference: AtomicReference<GameSession> = AtomicReference<GameSession>(null)
+    private val sessionReference: AtomicReference<GameSession> = AtomicReference<GameSession>(null)
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         channel = ctx.channel()
         val session = connectionManager.newSession(channel)
-        check(gameSessionReference.compareAndSet(null, session)) { "Session may not be set more than once" }
+        check(sessionReference.compareAndSet(null, session)) { "Session may not be set more than once" }
         session.onReady()
     }
 
-    override fun channelRead0(p0: ChannelHandlerContext?, p1: GameMessage) {
+    override fun channelRead0(context: ChannelHandlerContext?, packet: DatagramPacket) {
+        val session = sessionReference.get()
+        val content = packet.content()
+
+
+//        session.messageReceived(message)
 //        val content = packet.content()
 //
 //        val message1 = content.toString(CharsetUtil.UTF_8)
@@ -43,6 +49,7 @@ class MessagesHandler(private var connectionManager: GameServer) : SimpleChannel
 //            if (counter == 11)
 //                context.close()
 //        }
+
     }
 
 
@@ -51,7 +58,7 @@ class MessagesHandler(private var connectionManager: GameServer) : SimpleChannel
     }
 
 
-    override fun channelInactive(ctx: ChannelHandlerContext?) = gameSessionReference.get().onDisconnect()
+    override fun channelInactive(ctx: ChannelHandlerContext?) = sessionReference.get().onDisconnect()
 
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {
