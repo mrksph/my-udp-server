@@ -6,7 +6,6 @@ import net.handler.GameMessageHandler
 import net.message.GameMessage
 import net.service.CodecLookupService
 import net.service.HandlerLookupService
-import net.session.BaseSession
 
 
 abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol {
@@ -50,7 +49,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
 
     override fun readHeader(message: ByteBuf): GameCodec<*> {
         //TODO: SHOULD READ OTHER CODE from message
-        return inboundCodecs.find(0x00)
+        val opcode = message.readInt()
+        return inboundCodecs.find(opcode)
     }
 
     fun getMessageHandler(message: GameMessage)

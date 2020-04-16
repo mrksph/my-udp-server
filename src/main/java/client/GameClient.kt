@@ -7,6 +7,7 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
+import io.netty.util.CharsetUtil
 import io.netty.util.internal.SocketUtils
 
 class GameClient {
@@ -29,7 +30,10 @@ class GameClient {
                     .channel()
 
             val buffer: ByteBuf = ByteBufAllocator.DEFAULT.buffer(4)
-            buffer.writeByte(0x00)
+            buffer.writeInt(0x00)
+            buffer.writeInt(0x01)
+            buffer.writeBytes("HOLA".toByteArray(CharsetUtil.UTF_8))
+
 
             val packet = DatagramPacket(
                     buffer,

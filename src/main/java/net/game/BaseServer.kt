@@ -13,11 +13,10 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
 import net.MainServer
-import net.session.GameSession
-import net.session.BaseSession
-import net.session.SessionRegistry
 import net.protocol.ProtocolProvider
-import world.GameWorld
+import net.session.BaseSession
+import net.session.GameSession
+import net.session.SessionRegistry
 import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 
@@ -42,6 +41,7 @@ abstract class BaseServer(var server: MainServer,
         bootstrap
                 .group(group)
                 .channel(bestDatagramChannel())
+//        option(ChannelOption.SO_RCVBUF, int bytes)
     }
 
     open fun bind(address: InetSocketAddress) {
