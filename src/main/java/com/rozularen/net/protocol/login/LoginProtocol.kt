@@ -7,11 +7,11 @@ import com.rozularen.net.message.login.LoginStartMessage
 import com.rozularen.net.protocol.BaseProtocol
 
 class LoginProtocol(httpClient: HttpClient)
-    : BaseProtocol("LOGIN", 5) {
+    : BaseProtocol("LOGIN", 1) {
 
     init {
         val message = LoginStartMessage()
-        val codec = LoginStartCodec("LoginStartCodec")
+        val codec = LoginStartCodec()
         val handler = LoginStartHandler(httpClient)
         inbound(0x00,
                 message,

@@ -5,7 +5,8 @@ import com.rozularen.net.message.handshake.HandshakeMessage
 import io.netty.buffer.ByteBuf
 import io.netty.util.CharsetUtil
 
-class HandshakeCodec : GameCodec<HandshakeMessage>() {
+class HandshakeCodec
+    : GameCodec<HandshakeMessage>() {
     private val name = "HandshakeCodec"
 
     override fun decode(buffer: ByteBuf): HandshakeMessage {
@@ -27,6 +28,6 @@ class HandshakeCodec : GameCodec<HandshakeMessage>() {
 
 
     override fun getCodecName(): String {
-        return name;
+        return name
     }
 }

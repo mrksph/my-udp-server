@@ -13,9 +13,13 @@ class ServerScheduler(var server: MainServer,
     : Scheduler {
 
     constructor(server: MainServer, worlds: WorldScheduler) : this(server, worlds, server.sessionRegistry)
+    val tickEndRun : () -> Unit
+    init {
+        tickEndRun = worlds::doTickEnd
+    }
 
     private val inTickTask: Deque<Any> = ConcurrentLinkedDeque()
-    val pulseFrequency: Long = 50
+    val pulseFrequency: Long = 500
     val maxThreads: Int = Runtime.getRuntime().availableProcessors()
 
     private var executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(ThreadMaker)
@@ -74,7 +78,43 @@ class ServerScheduler(var server: MainServer,
                 }
             }
         }
+
+        try {
+            val currentTick = worlds.beginTick()
+            try {
+                asyncTaskExecutor.submit(tickEndRun)
+            } catch (ex: RejectedExecutionException) {
+                worlds.stop()
+                return
+            }
+
+            var tickTask: Runnable
+            synchronized(worlds) {
+                while (!worlds.isTickComplete(currentTick)) {
+                    while (inTickTask.poll().also { tickTask = it as Runnable } != null) {
+                        tickTask.run()
+                    }
+
+                }
+            }
+
+        } catch(e: InterruptedException) {
+            e.printStackTrace()
+        }
+        finally {
+            System.err.flush()
+            System.out.flush()
+        }
+
         println("[scheduler] pulse")
+    }
+
+    fun runTask(runnable: Runnable) {
+        schedule(Task(runnable, 0, -1, true))
+    }
+
+    fun runTaskAsync(runnable: Runnable) {
+
     }
 
     fun scheduleInTickExecution(run: Runnable) {
@@ -89,9 +129,6 @@ class ServerScheduler(var server: MainServer,
 
     fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
 
-    fun runTaskAsync(runnable: Runnable) {
-
-    }
 
     override fun isQueued(taskId: Int): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -31,7 +31,7 @@ class MainServer(args: Array<String>) : Server {
      */
     private var config: Config =
             Config(
-                    "",
+                    "config",
                     "server-conf.yml",
                     EnumMap(Config.Key::class.java)
             )

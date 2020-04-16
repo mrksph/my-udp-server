@@ -19,6 +19,7 @@ class CodecsHandler(private var protocol: GameProtocol) : MessageToMessageCodec<
         val readableBytes = content.readableBytes()
 
         val codec = protocol.readHeader(content)
+        println("THE CODEC NOW USING IS: ${codec.getCodecName()}")
         val decoded = codec.decode(content)
 
         if (content.readableBytes() > 0) {

@@ -29,7 +29,7 @@ class GameClient {
                     .sync()
                     .channel()
 
-            val buffer: ByteBuf = ByteBufAllocator.DEFAULT.buffer(4)
+            var buffer: ByteBuf = ByteBufAllocator.DEFAULT.buffer(4)
 
 
             val version = 1
@@ -47,16 +47,34 @@ class GameClient {
             buffer.writeInt(port)
             buffer.writeInt(state)
 
-
-            val packet = DatagramPacket(
+            var packet = DatagramPacket(
                     buffer,
                     SocketUtils.socketAddress("255.255.255.255", 31047),
                     SocketUtils.socketAddress(senderAddress, 31047))
 
             channel.writeAndFlush(packet).sync()
-            println("Write package")
+            println("Write HANDSHAKE package")
 
-        } finally {
+
+            buffer = ByteBufAllocator.DEFAULT.buffer(4)
+            // HEADER, OPCODE
+            buffer.writeInt(0x00)
+            // BODY FOR THIS MESSAGE
+            // VERSION, ADDRESS, PORT, STATE
+            buffer.writeBytes("marcos".toByteArray(CharsetUtil.UTF_8))
+
+             packet = DatagramPacket(
+                    buffer,
+                    SocketUtils.socketAddress("255.255.255.255", 31047),
+                    SocketUtils.socketAddress(senderAddress, 31047))
+
+            channel.writeAndFlush(packet).sync()
+            println("Write LOGIN package")
+
+        } catch(e: RuntimeException) {
+            e.printStackTrace()
+        }
+        finally {
             println("Disconnecting Game Client...")
             eventLoopGroup.shutdownGracefully()
             println("Game Client disconnected")

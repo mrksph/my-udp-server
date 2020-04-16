@@ -15,13 +15,16 @@ abstract class BaseSession(val server: MainServer,
 
 
     lateinit var sessionId: String
+
     var protocol = protocol
         set(newProtocol) {
             channel.flush()
             val key = "codecs"
             val codecsHandler = CodecsHandler(newProtocol)
             updatePipeline(key, codecsHandler)
+            field = newProtocol
         }
+
 
     private fun updatePipeline(key: String, codecsHandler: CodecsHandler) {
         channel.pipeline().replace(key, key, codecsHandler)
@@ -36,6 +39,7 @@ abstract class BaseSession(val server: MainServer,
 
         if (messageHandler != null) {
             try {
+                println("HANDLING ${message.getName()}")
                 messageHandler.handle(this, message)
             } catch (t: Throwable) {
                 this.onHandlerThrowable(message, messageHandler, t)
