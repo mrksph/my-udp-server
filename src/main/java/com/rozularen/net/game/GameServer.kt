@@ -3,7 +3,6 @@ package com.rozularen.net.game
 import com.rozularen.net.MainServer
 import com.rozularen.net.pipeline.GameChannelInitializer
 import com.rozularen.net.protocol.ProtocolProvider
-import com.rozularen.net.protocol.play.PlayProtocol
 import com.rozularen.net.session.BaseSession
 import com.rozularen.net.session.GameSession
 import io.netty.channel.Channel
@@ -33,7 +32,7 @@ class GameServer(server: MainServer,
     }
 
     override fun newSession(channel: Channel): GameSession {
-        val session = GameSession(server, PlayProtocol(), channel, this)
+        val session = GameSession(server, protocolProvider, channel, this)
         sessions.add(session)
         return session
     }

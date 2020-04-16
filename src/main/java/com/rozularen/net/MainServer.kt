@@ -23,7 +23,7 @@ import kotlin.system.exitProcess
 
 class MainServer(args: Array<String>) : Server {
     companion object {
-        const val PROTOCOL_VERSION = 4
+        const val PROTOCOL_VERSION = 1
     }
 
     /**
@@ -53,6 +53,7 @@ class MainServer(args: Array<String>) : Server {
     var port = 0
     var ip: String? = null
     var PROTOCOL_VERSION: Int = 1
+    var ONLINE_MODE: Boolean = true
     val version: String = ""
 
 

@@ -20,11 +20,9 @@ class MessagesHandler(private var connectionManager: GameServer) : SimpleChannel
         session.onReady()
     }
 
-    override fun channelRead0(context: ChannelHandlerContext?, packet: GameMessage) {
+    override fun channelRead0(context: ChannelHandlerContext?, message: GameMessage) {
         val session = sessionReference.get()
-
-//        val content = packet.content()
-
+        session.messageReceived(message)
     }
 
 

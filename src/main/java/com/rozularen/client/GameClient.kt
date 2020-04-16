@@ -30,15 +30,28 @@ class GameClient {
                     .channel()
 
             val buffer: ByteBuf = ByteBufAllocator.DEFAULT.buffer(4)
+
+
+            val version = 1
+            val senderAddress = "0.0.0.0"
+            val port = 31047
+            val state = 1
+
+            // HEADER, OPCODE
             buffer.writeInt(0x00)
-            buffer.writeInt(0x01)
-            buffer.writeBytes("HOLA".toByteArray(CharsetUtil.UTF_8))
+
+            // BODY FOR THIS MESSAGE
+            // VERSION, ADDRESS, PORT, STATE
+            buffer.writeInt(version)
+            buffer.writeBytes(senderAddress.toByteArray(CharsetUtil.UTF_8))
+            buffer.writeInt(port)
+            buffer.writeInt(state)
 
 
             val packet = DatagramPacket(
                     buffer,
                     SocketUtils.socketAddress("255.255.255.255", 31047),
-                    SocketUtils.socketAddress("0.0.0.0", 31047))
+                    SocketUtils.socketAddress(senderAddress, 31047))
 
             channel.writeAndFlush(packet).sync()
             println("Write package")

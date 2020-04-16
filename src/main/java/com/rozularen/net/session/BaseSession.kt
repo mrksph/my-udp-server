@@ -4,16 +4,28 @@ import com.rozularen.net.MainServer
 import com.rozularen.net.game.GameServer
 import com.rozularen.net.handler.GameMessageHandler
 import com.rozularen.net.message.GameMessage
+import com.rozularen.net.pipeline.CodecsHandler
 import com.rozularen.net.protocol.BaseProtocol
 import io.netty.channel.Channel
 
 abstract class BaseSession(val server: MainServer,
-                           var protocol: BaseProtocol,
+                           protocol: BaseProtocol,
                            val channel: Channel,
                            val gameServer: GameServer) {
 
 
     lateinit var sessionId: String
+    var protocol = protocol
+        set(newProtocol) {
+            channel.flush()
+            val key = "codecs"
+            val codecsHandler = CodecsHandler(newProtocol)
+            updatePipeline(key, codecsHandler)
+        }
+
+    private fun updatePipeline(key: String, codecsHandler: CodecsHandler) {
+        channel.pipeline().replace(key, key, codecsHandler)
+    }
 
     open fun messageReceived(message: GameMessage) {
         handleMessage(message)
@@ -37,8 +49,6 @@ abstract class BaseSession(val server: MainServer,
 
     abstract fun getProcessor()
 
-    abstract fun getProtocol()
-
     abstract fun send(message: GameMessage)
 
     abstract fun sendAll()
@@ -55,7 +65,6 @@ abstract class BaseSession(val server: MainServer,
     open fun isActive(): Boolean {
         return channel.isActive
     }
-
 
 
 }

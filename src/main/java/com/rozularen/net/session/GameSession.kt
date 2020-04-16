@@ -7,7 +7,7 @@ import com.rozularen.net.MainServer
 import com.rozularen.net.game.GameServer
 import com.rozularen.net.message.AsyncGameMessage
 import com.rozularen.net.message.GameMessage
-import com.rozularen.net.protocol.BaseProtocol
+import com.rozularen.net.protocol.ProtocolProvider
 import io.netty.channel.Channel
 import io.netty.channel.ChannelFuture
 import io.netty.handler.codec.CodecException
@@ -16,9 +16,9 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 
 class GameSession(server: MainServer,
-                  protocol: BaseProtocol,
+                  protocolProvider: ProtocolProvider,
                   channel: Channel,
-                  gameServer: GameServer) : BaseSession(server, protocol, channel, gameServer) {
+                  gameServer: GameServer) : BaseSession(server, protocolProvider.HANDSHAKE, channel, gameServer) {
 
     var version: Int = 0
     var virtualHost: InetSocketAddress? = null
@@ -78,10 +78,6 @@ class GameSession(server: MainServer,
     }
 
     override fun getProcessor() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getProtocol() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

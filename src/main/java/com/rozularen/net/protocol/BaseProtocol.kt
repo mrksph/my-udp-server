@@ -20,8 +20,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
                                codec: GameCodec<*>,
                                handler: GameMessageHandler<*, *>) {
         try {
-            inboundCodecs.bind(message, codec, opcode)
-            handlers.bind(message, handler)
+            inboundCodecs.bind(message.getName(), codec, opcode)
+            handlers.bind(message.getName(), handler)
         } catch (ex: InstantiationException) {
             System.err.println("Error while instantiating and binding")
         }
@@ -31,7 +31,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
                       message: GameMessage,
                       codec: GameCodec<GameMessage>) {
         try {
-            outboundCodecs.bind(message, codec, opcode)
+            outboundCodecs.bind(message.getName(), codec, opcode)
         } catch (ex: InstantiationException) {
             System.err.println("Error while instantiating and binding")
         }

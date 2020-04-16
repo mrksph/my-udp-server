@@ -4,6 +4,8 @@ package com.rozularen.net.message
 //
 //}
 interface GameMessage {
+    fun getName() : String
+
     override fun toString(): String
 
     override fun equals(other: Any?): Boolean

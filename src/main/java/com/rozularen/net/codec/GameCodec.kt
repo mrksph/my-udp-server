@@ -5,9 +5,9 @@ import io.netty.buffer.ByteBuf
 
 abstract class GameCodec<T : GameMessage> {
 
-    abstract fun encode(var1: ByteBuf, var2: T): ByteBuf
+    abstract fun encode(buffer: ByteBuf, message: T): ByteBuf
 
-    abstract fun decode(var1: ByteBuf): T
+    abstract fun decode(buffer: ByteBuf): T
 
     abstract fun getCodecName(): String
 

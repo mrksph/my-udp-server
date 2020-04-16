@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class CodecLookupService(size: Int) {
 
-    private var messages: ConcurrentMap<GameMessage, GameCodec.CodecRegistration>
+    private var messages: ConcurrentMap<String, GameCodec.CodecRegistration>
     private var opcodes: ConcurrentMap<Int, GameCodec<*>>
     private var nextId: AtomicInteger
 
@@ -28,8 +28,8 @@ class CodecLookupService(size: Int) {
             IllegalAccessException::class,
             InvocationTargetException::class)
     //TODO: CHANGE OPCODE: INT TO INT? POR SI LLEGAN ERRORES EN PAQUETES (?))
-    fun bind(message: GameMessage, codec: GameCodec<*>, opcode: Int): GameCodec.CodecRegistration? {
-        var codecRegistration = messages[message]
+    fun bind(name: String, codec: GameCodec<*>, opcode: Int): GameCodec.CodecRegistration? {
+        var codecRegistration = messages[name]
         if (codecRegistration != null) {
             return codecRegistration
         } else {
@@ -44,7 +44,7 @@ class CodecLookupService(size: Int) {
             } else {
                 opcodes[opcode] = codec
                 codecRegistration = GameCodec.CodecRegistration(opcode, codec)
-                messages[message] = codecRegistration
+                messages[name] = codecRegistration
                 codecRegistration
             }
         }
@@ -55,7 +55,7 @@ class CodecLookupService(size: Int) {
     }
 
     fun find(message: GameMessage): GameCodec.CodecRegistration? {
-        return messages[message]
+        return messages[message.getName()]
     }
 
     override fun toString(): String {
