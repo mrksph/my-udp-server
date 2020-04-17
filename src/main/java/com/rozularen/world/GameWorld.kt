@@ -18,6 +18,11 @@ class GameWorld(val server: MainServer,
     var initialized: Boolean = false
 
     init {
+        name = worldCreator.name!!
+        //TODO: Read UUID FROM SAVED FILE AND MORE THINGS (CREATE THE ACTUAL 2d WORLD)
+        uuid = UUID.randomUUID()
+
+
         storage.setWorld(this)
         server.addWorld(this)
         initialized = true

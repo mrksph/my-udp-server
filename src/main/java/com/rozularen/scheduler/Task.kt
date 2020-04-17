@@ -29,7 +29,7 @@ class Task(var task: Runnable,
         return execState
     }
 
-    fun shouldExecuteUpdate(): TaskExecutionState {
+    private fun shouldExecuteUpdate(): TaskExecutionState {
         if (isDone) {
             return TaskExecutionState.STOP
         }
@@ -62,7 +62,8 @@ class Task(var task: Runnable,
         try {
             get()
         } catch (exception: ExecutionException) {
-
+            exception.printStackTrace()
+            System.err.println("CAUSE : ${exception.cause}")
         } catch (exception: InterruptedException) {
             //Task is done, we are in done() method
         }

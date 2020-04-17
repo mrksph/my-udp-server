@@ -30,10 +30,7 @@ class EntityManager {
 
     fun getAllPayers(): List<GamePlayer> {
         return entities.values
-                .filter {
-                    it is GamePlayer
-                }.map {
-                    it as GamePlayer
-                }.toList()
+                .filterIsInstance<GamePlayer>()
+                 .toList()
     }
 }

@@ -7,6 +7,7 @@ import com.rozularen.net.message.GameMessage
 import com.rozularen.net.pipeline.CodecsHandler
 import com.rozularen.net.protocol.BaseProtocol
 import io.netty.channel.Channel
+import io.netty.channel.ChannelFuture
 
 abstract class BaseSession(val server: MainServer,
                            protocol: BaseProtocol,
@@ -55,8 +56,6 @@ abstract class BaseSession(val server: MainServer,
 
     abstract fun send(message: GameMessage)
 
-    abstract fun sendAll()
-
     abstract fun disconnect(reason: String)
 
     abstract fun onReady()
@@ -70,5 +69,7 @@ abstract class BaseSession(val server: MainServer,
         return channel.isActive
     }
 
+    abstract fun sendWithFuture(message: GameMessage): ChannelFuture?
 
+    abstract fun sendAll(messages: List<GameMessage>)
 }

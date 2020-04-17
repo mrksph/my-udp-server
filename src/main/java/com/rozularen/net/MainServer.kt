@@ -43,7 +43,11 @@ class MainServer(args: Array<String>) : Server {
     private val worldContainer: File = File(config.getString(Config.Key.WORLD_FOLDER))
     val sessionRegistry: SessionRegistry = SessionRegistry()
     private val worldScheduler: WorldScheduler = WorldScheduler()
-    val worldEntries = worldScheduler.worlds
+    //    val worldEntries = worldScheduler.worlds
+    val worldEntries: MutableList<WorldScheduler.WorldEntry>
+        get() {
+            return worldScheduler.worlds
+        }
     val scheduler: ServerScheduler = ServerScheduler(this, worldScheduler)
 
     val entityIdManager: EntityIdManager = EntityIdManager()

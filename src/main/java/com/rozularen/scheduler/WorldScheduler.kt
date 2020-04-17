@@ -68,7 +68,6 @@ class WorldScheduler {
     }
 
     fun doTickEnd() {
-        val currentTick = this.currentTick
         val endPhase = tickEnd.arriveAndAwaitAdvance()
         if (endPhase != currentTick + 1) {
             System.err.println("Tick barrier")

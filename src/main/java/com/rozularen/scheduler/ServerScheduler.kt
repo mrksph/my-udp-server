@@ -110,19 +110,28 @@ class ServerScheduler(var server: MainServer,
     }
 
     fun runTask(runnable: Runnable) {
-        schedule(Task(runnable, 0, -1, true))
+
+        runTaskLater(runnable, 0)
+    }
+
+    private fun runTaskLater(runnable: Runnable, delay: Long) {
+        runTaskTimer(runnable, delay,-1)
+    }
+
+    private fun runTaskTimer(runnable: Runnable, delay:Long, period: Long) {
+        schedule(Task(runnable, delay, period, true))
     }
 
     fun runTaskAsync(runnable: Runnable) {
 
     }
 
-    fun scheduleInTickExecution(run: Runnable) {
+    fun scheduleInTickExecution(runnable: Runnable) {
         if (isPrimaryThread() || executor.isShutdown) {
-            run.run()
+            runnable.run()
         } else {
             synchronized(this) {
-                inTickTask.addFirst(run)
+                inTickTask.addFirst(runnable)
             }
         }
     }

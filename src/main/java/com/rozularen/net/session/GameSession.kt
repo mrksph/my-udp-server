@@ -82,10 +82,10 @@ class GameSession(server: MainServer,
     }
 
     override fun send(message: GameMessage) {
-
+        sendWithFuture(message)
     }
 
-    private fun sendWithFuture(message: GameMessage): ChannelFuture? {
+    override fun sendWithFuture(message: GameMessage): ChannelFuture? {
         if (!this.channel.isActive) {
             throw Exception("Trying to send when session is inactive")
         } else {
@@ -97,8 +97,10 @@ class GameSession(server: MainServer,
         }
     }
 
-    override fun sendAll() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun sendAll(messages: List<GameMessage>) {
+        messages.forEach {
+            send(it)
+        }
     }
 
     override fun disconnect(reason: String) {
@@ -117,7 +119,7 @@ class GameSession(server: MainServer,
 
 
     override fun onReady() {
-
+        println("Session is ready")
     }
 
     override fun onDisconnect() {
