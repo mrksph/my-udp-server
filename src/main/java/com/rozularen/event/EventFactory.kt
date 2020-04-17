@@ -12,6 +12,10 @@ class EventFactory
 
     companion object {
         fun <T : Event> callEvent(event: T): T {
+//            if (event.handlers.registeredListeners.length != 0) {
+//                return event
+//            }
+
             val server = ServerProvider.server
             if (event.isAsync) {
                 return event
@@ -33,5 +37,21 @@ class EventFactory
 
             }
         }
+
+        fun onPlayerLogin() {
+
+        }
+
+        fun onPlayerJoin() {
+
+        }
+
+        fun onPlayerKick() {
+        }
+
+        fun onPlayerQuit() {
+
+        }
     }
+
 }

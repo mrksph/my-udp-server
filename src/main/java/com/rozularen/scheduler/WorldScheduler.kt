@@ -6,10 +6,13 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Phaser
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class WorldScheduler {
 
-    private val advancedCondition: Object = Object()
+    val lock: ReentrantLock = ReentrantLock()
+    val advancedCondition = lock.newCondition()
     private val worldExecutor: ExecutorService = Executors.newCachedThreadPool()
     var worlds: MutableList<WorldEntry> = CopyOnWriteArrayList()
     private val tickBegin: Phaser = Phaser(1)
@@ -19,12 +22,12 @@ class WorldScheduler {
     private var currentTick: Int = -1
 
 
-    fun getWorld(name: String) : GameWorld? {
+    fun getWorld(name: String): GameWorld? {
         val find = worlds.find { it.world.name == name }
         return find?.world
     }
 
-    fun getWorld(uuid: UUID) : GameWorld? {
+    fun getWorld(uuid: UUID): GameWorld? {
         val find = worlds.find { it.world.uuid == uuid }
         return find?.world
     }
@@ -48,8 +51,8 @@ class WorldScheduler {
     }
 
     fun removeWorld(world: GameWorld): Boolean {
-        worlds.forEach{
-            if(it.world == world) {
+        worlds.forEach {
+            if (it.world == world) {
                 it.task.interrupt()
             }
             worlds.remove(it)
@@ -72,8 +75,8 @@ class WorldScheduler {
         if (endPhase != currentTick + 1) {
             System.err.println("Tick barrier")
         }
-        synchronized(advancedCondition) {
-            advancedCondition.notifyAll()
+        lock.withLock {
+            advancedCondition.signalAll()
         }
     }
 
@@ -85,6 +88,6 @@ class WorldScheduler {
 
 
     class WorldEntry(var world: GameWorld) {
-        lateinit var task : WorldThread
+        lateinit var task: WorldThread
     }
 }

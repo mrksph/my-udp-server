@@ -1,6 +1,8 @@
 package com.rozularen.world
 
 import com.rozularen.entity.EntityManager
+import com.rozularen.event.EventFactory
+import com.rozularen.event.world.WorldInitEvent
 import com.rozularen.generator.WorldGenerator
 import com.rozularen.io.WorldStorageProvider
 import com.rozularen.net.MainServer
@@ -19,12 +21,11 @@ class GameWorld(val server: MainServer,
 
     init {
         //TODO: Read UUID FROM SAVED FILE AND MORE THINGS (CREATE THE ACTUAL 2d WORLD)
-
-
         storage.setWorld(this)
         server.addWorld(this)
         initialized = true
         generator = worldCreator.generator
+        EventFactory.callEvent(WorldInitEvent(this))
     }
 
     fun pulse() {

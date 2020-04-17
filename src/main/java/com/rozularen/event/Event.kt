@@ -1,12 +1,10 @@
 package com.rozularen.event
 
-abstract class Event(val isAsync: Boolean) {
+abstract class Event(val isAsync: Boolean = false) {
 
-    constructor() : this(false)
+    val handlers: HandlersList = HandlersList()
 
     private val name: String = this.javaClass.simpleName
-
-    abstract fun getHandlers() : HandlersList
 
     enum class Result {
         DENY,

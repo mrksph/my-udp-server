@@ -5,6 +5,8 @@ import com.rozularen.net.session.SessionRegistry
 import com.rozularen.util.ThreadMaker
 import java.util.*
 import java.util.concurrent.*
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class ServerScheduler(var server: MainServer,
                       var worlds: WorldScheduler,
@@ -13,12 +15,14 @@ class ServerScheduler(var server: MainServer,
     : Scheduler {
 
     constructor(server: MainServer, worlds: WorldScheduler) : this(server, worlds, server.sessionRegistry)
-    val tickEndRun : () -> Unit
+
+    val tickEndRun: () -> Unit
+
     init {
         tickEndRun = worlds::doTickEnd
     }
 
-    private val inTickTask: Deque<Any> = ConcurrentLinkedDeque()
+    private val inTickTasks: Deque<Any> = ConcurrentLinkedDeque()
     val pulseFrequency: Long = 500
     val maxThreads: Int = Runtime.getRuntime().availableProcessors()
 
@@ -31,6 +35,9 @@ class ServerScheduler(var server: MainServer,
             LinkedBlockingDeque<Runnable>(),
             ThreadMaker
     )
+
+    val lock: ReentrantLock = worlds.lock
+    val condition = worlds.advancedCondition
 
     private var tasks: ConcurrentHashMap<Int, Task> = ConcurrentHashMap()
 
@@ -55,6 +62,17 @@ class ServerScheduler(var server: MainServer,
     fun schedule(task: Task): Task {
         tasks[task.taskId] = task
         return task
+    }
+
+    fun scheduleInTickExecution(runnable: Runnable) {
+        if (isPrimaryThread() || executor.isShutdown) {
+            runnable.run()
+        } else {
+            lock.withLock {
+                inTickTasks.addFirst(runnable)
+                condition.signalAll()
+            }
+        }
     }
 
     fun pulse() {
@@ -90,23 +108,20 @@ class ServerScheduler(var server: MainServer,
                 return
             }
 
-            var tickTask: Runnable
-            synchronized(this) {
-                while (!worlds.isTickComplete(currentTick)) {
+            var tickTask: Runnable? = null
 
-                    while ((inTickTask.poll().also { tickTask = it as Runnable }) != null) {
-                        tickTask.run()
+            lock.withLock {
+                while (!worlds.isTickComplete(currentTick)) {
+                    while (inTickTasks.poll() != null) {
+                        tickTask?.run()
                     }
                 }
             }
-
-        } catch(e: InterruptedException) {
-            e.printStackTrace()
+        } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
-        }
-        finally {
-            System.err.flush()
+        } finally {
             System.out.flush()
+            System.err.flush()
         }
 
         println("[scheduler] pulse")
@@ -118,10 +133,10 @@ class ServerScheduler(var server: MainServer,
     }
 
     private fun runTaskLater(runnable: Runnable, delay: Long) {
-        runTaskTimer(runnable, delay,-1)
+        runTaskTimer(runnable, delay, -1)
     }
 
-    private fun runTaskTimer(runnable: Runnable, delay:Long, period: Long) {
+    private fun runTaskTimer(runnable: Runnable, delay: Long, period: Long) {
         schedule(Task(runnable, delay, period, true))
     }
 
@@ -129,15 +144,6 @@ class ServerScheduler(var server: MainServer,
 
     }
 
-    fun scheduleInTickExecution(runnable: Runnable) {
-        if (isPrimaryThread() || executor.isShutdown) {
-            runnable.run()
-        } else {
-            synchronized(this) {
-                inTickTask.addFirst(runnable)
-            }
-        }
-    }
 
     fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
 
