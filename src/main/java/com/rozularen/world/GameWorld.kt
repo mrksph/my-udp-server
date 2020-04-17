@@ -13,14 +13,12 @@ class GameWorld(val server: MainServer,
     private var generator: WorldGenerator
     val entityManager: EntityManager = EntityManager()
 
-    lateinit var name: String
-    lateinit var uuid: UUID
+    var name: String = worldCreator.name!!
+    var uuid: UUID = UUID.randomUUID()
     var initialized: Boolean = false
 
     init {
-        name = worldCreator.name!!
         //TODO: Read UUID FROM SAVED FILE AND MORE THINGS (CREATE THE ACTUAL 2d WORLD)
-        uuid = UUID.randomUUID()
 
 
         storage.setWorld(this)
@@ -35,8 +33,6 @@ class GameWorld(val server: MainServer,
         allPlayers.forEach {
             it.pulse()
         }
-
-
     }
 
     fun save(isAsync: Boolean) {
@@ -62,6 +58,5 @@ class GameWorld(val server: MainServer,
             runnable.run()
         }
     }
-
 
 }

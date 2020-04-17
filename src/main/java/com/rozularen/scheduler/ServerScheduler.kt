@@ -59,7 +59,9 @@ class ServerScheduler(var server: MainServer,
 
     fun pulse() {
         primaryThread = Thread.currentThread()
+
         sessionRegistry.pulse()
+
         // Run the relevant tasks.
         val it: MutableIterator<Task> = tasks.values.iterator()
         while (it.hasNext()) {
@@ -89,17 +91,18 @@ class ServerScheduler(var server: MainServer,
             }
 
             var tickTask: Runnable
-            synchronized(worlds) {
+            synchronized(this) {
                 while (!worlds.isTickComplete(currentTick)) {
-                    while (inTickTask.poll().also { tickTask = it as Runnable } != null) {
+
+                    while ((inTickTask.poll().also { tickTask = it as Runnable }) != null) {
                         tickTask.run()
                     }
-
                 }
             }
 
         } catch(e: InterruptedException) {
             e.printStackTrace()
+            Thread.currentThread().interrupt()
         }
         finally {
             System.err.flush()
