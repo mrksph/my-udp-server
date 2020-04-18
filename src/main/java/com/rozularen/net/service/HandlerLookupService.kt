@@ -15,7 +15,7 @@ class HandlerLookupService {
     }
 
     fun find(message: GameMessage): GameMessageHandler<*, *>? {
-        return handlers[message.getName()]
+        return handlers[message.name]
     }
 
     override fun toString(): String {

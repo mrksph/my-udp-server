@@ -41,7 +41,7 @@ abstract class BaseSession(val server: MainServer,
 
         if (messageHandler != null) {
             try {
-                println("HANDLING ${message.getName()}")
+                println("HANDLING ${message.name}")
                 messageHandler.handle(this, message)
             } catch (t: Throwable) {
                 this.onHandlerThrowable(message, messageHandler, t)

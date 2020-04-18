@@ -20,8 +20,8 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
                                codec: GameCodec<*>,
                                handler: GameMessageHandler<*, *>) {
         try {
-            inboundCodecs.bind(message.getName(), codec, opcode)
-            handlers.bind(message.getName(), handler)
+            inboundCodecs.bind(message.name, codec, opcode)
+            handlers.bind(message.name, handler)
         } catch (ex: InstantiationException) {
             System.err.println("Error while instantiating and binding")
         }
@@ -31,7 +31,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
                       message: GameMessage,
                       codec: GameCodec<*>) {
         try {
-            outboundCodecs.bind(message.getName(), codec, opcode)
+            outboundCodecs.bind(message.name, codec, opcode)
         } catch (ex: InstantiationException) {
             System.err.println("Error while instantiating and binding")
         }
@@ -41,7 +41,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
         val find = outboundCodecs.find(message)
 
         if (find == null) {
-            System.err.println("No codec to write: ${message.getName()} in $name")
+            System.err.println("No codec to write: ${message.name} in $name")
         }
 
         return find!!

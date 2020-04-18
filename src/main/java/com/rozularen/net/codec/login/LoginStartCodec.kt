@@ -11,14 +11,14 @@ class LoginStartCodec()
 
     override fun decode(buffer: ByteBuf): LoginStartMessage {
         val username = buffer.readBytes(5).toString(CharsetUtil.UTF_8)
-        return LoginStartMessage(0, username)
+        return LoginStartMessage(username)
     }
 
     override fun encode(buffer: ByteBuf, message: LoginStartMessage): ByteBuf {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        buffer.writeBytes(message.username.toByteArray(CharsetUtil.UTF_8))
+        return buffer
     }
 
-    override fun getCodecName(): String {
-        return name
-    }
+    override fun getCodecName(): String = name
+
 }

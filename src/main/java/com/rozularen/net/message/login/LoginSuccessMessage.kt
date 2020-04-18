@@ -6,10 +6,6 @@ data class LoginSuccessMessage(val uuid: String = "",
                                val username: String = "")
     : GameMessage {
 
-    private val name = "LoginStartMessage"
-
-    override fun getName(): String {
-        return name
-    }
+    override val name = "LoginStartMessage"
 
 }

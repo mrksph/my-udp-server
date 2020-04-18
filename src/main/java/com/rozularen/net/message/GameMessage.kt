@@ -7,7 +7,8 @@ import java.io.Serializable
 //
 //}
 interface GameMessage : Serializable{
-    fun getName() : String
+
+    val name : String
 
     override fun toString(): String
 

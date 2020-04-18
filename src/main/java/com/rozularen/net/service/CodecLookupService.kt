@@ -55,7 +55,7 @@ class CodecLookupService(size: Int) {
     }
 
     fun find(message: GameMessage): GameCodec.CodecRegistration? {
-        return messages[message.getName()]
+        return messages[message.name]
     }
 
     override fun toString(): String {
