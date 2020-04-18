@@ -7,6 +7,7 @@ import com.rozularen.net.MainServer
 import com.rozularen.net.game.GameServer
 import com.rozularen.net.message.AsyncGameMessage
 import com.rozularen.net.message.GameMessage
+import com.rozularen.net.message.login.LoginSuccessMessage
 import com.rozularen.net.protocol.ProtocolProvider
 import io.netty.channel.Channel
 import io.netty.channel.ChannelFuture
@@ -16,9 +17,8 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 
 class GameSession(server: MainServer,
-                  protocolProvider: ProtocolProvider,
                   channel: Channel,
-                  gameServer: GameServer) : BaseSession(server, protocolProvider.HANDSHAKE, channel, gameServer) {
+                  gameServer: GameServer) : BaseSession(server, ProtocolProvider.HANDSHAKE, channel, gameServer) {
 
     var version: Int = 0
     var virtualHost: InetSocketAddress? = null
@@ -57,10 +57,11 @@ class GameSession(server: MainServer,
     fun setPlayer(profile: PlayerProfile) {
         val playerLocation = getInitialLocation()
         player = GamePlayer(this, profile, playerLocation)
-        finalizeLogin()
+        finalizeLogin(profile)
 
         if (!isActive()) {
             onDisconnect()
+            return
         }
 
         player!!.join(this)
@@ -73,8 +74,9 @@ class GameSession(server: MainServer,
         return Location(world, 1.0, 1.0, 1.0, 0F, 0F)
     }
 
-    override fun finalizeLogin() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun finalizeLogin(profile: PlayerProfile) {
+        send(LoginSuccessMessage(profile.uuid, profile.name))
+        this.protocol = ProtocolProvider.PLAY
     }
 
     override fun getProcessor() {
@@ -91,6 +93,7 @@ class GameSession(server: MainServer,
         } else {
             return this.channel.writeAndFlush(message).addListener {
                 if (it.cause() != null) {
+                    it.cause().printStackTrace()
                     this.onOutboundThrowable(it.cause())
                 }
             }
@@ -108,12 +111,11 @@ class GameSession(server: MainServer,
         channel.close()
     }
 
-    fun onOutboundThrowable(cause: Throwable) {
-
+    private fun onOutboundThrowable(cause: Throwable) {
         if (cause is CodecException) {
             System.err.println("Error in network output")
         } else {
-            disconnect("")
+            disconnect("write error: ${cause.message}")
         }
     }
 
@@ -123,7 +125,7 @@ class GameSession(server: MainServer,
     }
 
     override fun onDisconnect() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        disconnected = true
     }
 
 

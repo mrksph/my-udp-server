@@ -68,14 +68,16 @@ class GameClient {
                     SocketUtils.socketAddress("255.255.255.255", 31047),
                     SocketUtils.socketAddress(senderAddress, 31047))
 
-            channel.writeAndFlush(packet).sync()
+            channel.writeAndFlush(packet).sync().addListener {
+                println("S")
+            }
             println("Write LOGIN package")
 
         } catch(e: RuntimeException) {
             e.printStackTrace()
         }
         finally {
-            println("Disconnecting Game Client...")
+            println("Disconnecting G ame Client...")
             eventLoopGroup.shutdownGracefully()
             println("Game Client disconnected")
         }

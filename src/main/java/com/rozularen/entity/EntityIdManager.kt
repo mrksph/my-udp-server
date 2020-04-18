@@ -8,19 +8,15 @@ class EntityIdManager {
 
     @Synchronized
     fun allocate(entity: BaseEntity): Int {
-        val startedAt = lastId
+        // TODO: WATCH THIS OUT MAY OCCUR SOME PROBLEM
+        val id = lastId + 1
 
-        // intentionally wraps around integer boundaries
-        for (id in lastId + 1 until startedAt) { // skip special values
-            if (id == -1 || id == 0) {
-                continue
-            }
-            if (usedIds.add(id)) {
-                entity.id = id
-                lastId = id
-                return id
-            }
+        if (usedIds.add(id)) {
+            entity.id = id
+            lastId = id
+            return id
         }
+
         throw IllegalStateException("Cant allocate")
     }
 

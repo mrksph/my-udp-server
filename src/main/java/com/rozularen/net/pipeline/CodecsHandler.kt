@@ -1,17 +1,32 @@
 package com.rozularen.net.pipeline
 
+import com.rozularen.net.codec.GameCodec
+import com.rozularen.net.message.GameMessage
 import com.rozularen.net.protocol.GameProtocol
-import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.socket.DatagramPacket
 import io.netty.handler.codec.MessageToMessageCodec
 
-class CodecsHandler(private var protocol: GameProtocol) : MessageToMessageCodec<DatagramPacket, ByteBuf>() {
+class CodecsHandler(private var protocol: GameProtocol)
+    : MessageToMessageCodec<DatagramPacket, GameMessage>() {
 
-    override fun encode(context: ChannelHandlerContext, buffer: ByteBuf, out: MutableList<Any>) {
-        val headerBuffer = context.alloc().buffer(8)
+    override fun encode(context: ChannelHandlerContext, message: GameMessage, out: MutableList<Any>) {
 
 
+        val codecRegistration = protocol.getCodecRegistration(message)
+
+        var headerBuffer = context.alloc().buffer(8)
+        headerBuffer.writeInt(codecRegistration.opcode)
+
+        var messageBuffer = context.alloc().buffer(8)
+        val codec: GameCodec<in GameMessage> = codecRegistration.codec as GameCodec<in GameMessage>
+        messageBuffer = codec.encode(messageBuffer, message)
+
+        println("ENCODING USING ${codecRegistration.codec.getCodecName()}")
+
+
+        out.add(Unpooled.wrappedBuffer(headerBuffer, messageBuffer))
     }
 
     override fun decode(context: ChannelHandlerContext, packet: DatagramPacket, out: MutableList<Any>) {

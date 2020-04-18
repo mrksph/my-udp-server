@@ -29,7 +29,7 @@ abstract class BaseProtocol(var name: String, highestOpCode: Int) : GameProtocol
 
     open fun outbound(opcode: Int,
                       message: GameMessage,
-                      codec: GameCodec<GameMessage>) {
+                      codec: GameCodec<*>) {
         try {
             outboundCodecs.bind(message.getName(), codec, opcode)
         } catch (ex: InstantiationException) {

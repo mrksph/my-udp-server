@@ -1,9 +1,11 @@
 package com.rozularen.net.protocol.login
 
+import com.rozularen.net.codec.LoginSuccessCodec
 import com.rozularen.net.codec.login.LoginStartCodec
 import com.rozularen.net.handler.login.LoginStartHandler
 import com.rozularen.net.http.HttpClient
 import com.rozularen.net.message.login.LoginStartMessage
+import com.rozularen.net.message.login.LoginSuccessMessage
 import com.rozularen.net.protocol.BaseProtocol
 
 class LoginProtocol(httpClient: HttpClient)
@@ -17,5 +19,9 @@ class LoginProtocol(httpClient: HttpClient)
                 message,
                 codec,
                 handler)
+
+        outbound(0x00,
+                LoginSuccessMessage(),
+                LoginSuccessCodec())
     }
 }

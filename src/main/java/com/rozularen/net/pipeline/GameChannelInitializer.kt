@@ -1,6 +1,7 @@
 package com.rozularen.net.pipeline
 
 import com.rozularen.net.game.GameServer
+import com.rozularen.net.protocol.ProtocolProvider
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.DatagramChannel
 
@@ -13,8 +14,9 @@ class GameChannelInitializer(private var connectionManager: GameServer) : Channe
         // If your business logic is fully asynchronous or finished very quickly, you don't
         // need to specify a group.
 
+        val codecsHandler = CodecsHandler(ProtocolProvider.HANDSHAKE)
         channel.pipeline()
-                .addLast("codecs", CodecsHandler(connectionManager.protocolProvider.HANDSHAKE))
+                .addLast("codecs", codecsHandler)
                 .addLast("messages", MessagesHandler(connectionManager))
         //   .addLast("logic", MyLogicHandler())
         //   .pipeline.addLast(group, "handler", new MyBusinessLogicHandler());

@@ -1,5 +1,6 @@
 package com.rozularen.net.session
 
+import com.rozularen.entity.meta.PlayerProfile
 import com.rozularen.net.MainServer
 import com.rozularen.net.game.GameServer
 import com.rozularen.net.handler.GameMessageHandler
@@ -63,7 +64,8 @@ abstract class BaseSession(val server: MainServer,
     abstract fun onDisconnect()
 
     abstract fun pulse()
-    abstract fun finalizeLogin()
+
+    abstract fun finalizeLogin(profile: PlayerProfile)
 
     open fun isActive(): Boolean {
         return channel.isActive

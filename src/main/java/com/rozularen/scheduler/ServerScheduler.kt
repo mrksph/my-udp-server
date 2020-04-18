@@ -23,7 +23,7 @@ class ServerScheduler(var server: MainServer,
     }
 
     private val inTickTasks: Deque<Any> = ConcurrentLinkedDeque()
-    val pulseFrequency: Long = 500
+    val pulseFrequency: Long = 1000
     val maxThreads: Int = Runtime.getRuntime().availableProcessors()
 
     private var executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(ThreadMaker)
@@ -145,7 +145,7 @@ class ServerScheduler(var server: MainServer,
     }
 
 
-    fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
+    private fun isPrimaryThread(): Boolean = Thread.currentThread() == primaryThread
 
 
     override fun isQueued(taskId: Int): Boolean {

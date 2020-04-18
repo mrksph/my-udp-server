@@ -8,7 +8,6 @@ import com.rozularen.entity.player.GamePlayer
 import com.rozularen.generator.WorldGenerator
 import com.rozularen.io.StorageProviderFactory
 import com.rozularen.net.game.GameServer
-import com.rozularen.net.protocol.ProtocolProvider
 import com.rozularen.net.session.SessionRegistry
 import com.rozularen.scheduler.ServerScheduler
 import com.rozularen.scheduler.WorldScheduler
@@ -99,11 +98,10 @@ class MainServer(args: Array<String>) : Server {
 
     fun bind() {
         val latch = CountDownLatch(1)
-        val protocolProvider = ProtocolProvider()
         val address = Networking.getBindAddress(DEFAULT_PORT)
 
         //Create a GameServer (com.rozularen.main server)
-        server = GameServer(this, protocolProvider, latch)
+        server = GameServer(this, latch)
         println("Binding Main Server... address: $address")
         server.bind(address)
 

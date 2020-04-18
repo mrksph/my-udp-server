@@ -2,7 +2,6 @@ package com.rozularen.net.game
 
 import com.rozularen.net.MainServer
 import com.rozularen.net.pipeline.GameChannelInitializer
-import com.rozularen.net.protocol.ProtocolProvider
 import com.rozularen.net.session.BaseSession
 import com.rozularen.net.session.GameSession
 import io.netty.channel.Channel
@@ -11,9 +10,8 @@ import java.util.concurrent.CountDownLatch
 import kotlin.system.exitProcess
 
 class GameServer(server: MainServer,
-                 protocolProvider: ProtocolProvider,
                  latch: CountDownLatch)
-    : BaseServer(server, protocolProvider, latch) {
+    : BaseServer(server, latch) {
 
     init {
         bootstrap.handler(GameChannelInitializer(this))
@@ -32,7 +30,7 @@ class GameServer(server: MainServer,
     }
 
     override fun newSession(channel: Channel): GameSession {
-        val session = GameSession(server, protocolProvider, channel, this)
+        val session = GameSession(server, channel, this)
         sessions.add(session)
         return session
     }

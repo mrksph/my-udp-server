@@ -1,7 +1,6 @@
 package com.rozularen.net.game
 
 import com.rozularen.net.MainServer
-import com.rozularen.net.protocol.ProtocolProvider
 import com.rozularen.net.session.BaseSession
 import com.rozularen.net.session.GameSession
 import com.rozularen.net.session.SessionRegistry
@@ -21,7 +20,6 @@ import java.net.InetSocketAddress
 import java.util.concurrent.CountDownLatch
 
 abstract class BaseServer(var server: MainServer,
-                          var protocolProvider: ProtocolProvider,
                           var latch: CountDownLatch) {
 
     private val EPOLL_AVAILABLE = Epoll.isAvailable()

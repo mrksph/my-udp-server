@@ -6,22 +6,30 @@ import com.rozularen.net.protocol.login.LoginProtocol
 import com.rozularen.net.protocol.play.PlayProtocol
 
 
-class ProtocolProvider {
-    val HANDSHAKE: HandshakeProtocol
+object ProtocolProvider {
     //  val status: StatusProtocol
-    val login: LoginProtocol
-    val PLAY: PlayProtocol
+    val httpClient: HttpClient = object : HttpClient {
+        override fun connect() {
+
+        }
+    }
+    val LOGIN: LoginProtocol = LoginProtocol(httpClient)
+    val HANDSHAKE: HandshakeProtocol = HandshakeProtocol(LOGIN)
+    val PLAY: PlayProtocol = PlayProtocol()
+
 
     init {
-        //  status = StatusProtocol()
-        val httpClient: HttpClient = object : HttpClient {
-            override fun connect() {
-
-            }
-        }
-        login = LoginProtocol(httpClient)
-        //  handshake = HandshakeProtocol(status, login)
-        HANDSHAKE = HandshakeProtocol(login)
-        PLAY = PlayProtocol()
+        println("Init ProtocolProvider")
     }
+    //        //  status = StatusProtocol()
+//        val httpClient: HttpClient = object : HttpClient {
+//            override fun connect() {
+//
+//            }
+//        }
+//        login = LoginProtocol(httpClient)
+//        //  handshake = HandshakeProtocol(status, login)
+//        HANDSHAKE = HandshakeProtocol(login)
+//        PLAY = PlayProtocol()
+//    }
 }
